@@ -13,7 +13,7 @@ jobs:
       id: version
  
     - name: build
-      run: lit -f styles.env
+      run: ./lit -f styles.env
 
     - name: rename build
       run: mv dist/bubble.ui.css dist/bubble.ui-v${{ steps.version.outputs.version }}.css
