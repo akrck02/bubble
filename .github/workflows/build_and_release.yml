@@ -7,25 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 'latest'
-
-    - run: npm install
-
+    
     - name : version
-      run: echo "::set-output name=version::$(node version.js)" 
+      run: echo "::set-output name=version::$(cat version)" 
       id: version
-
-    - name : version name
-      run: echo "::set-output name=version-name::$(node version.js true)" 
-      id: version-name
-
+ 
     - name: build
-      run: npm run build
+      run: lit -f styles.env
 
     - name: rename build
-      run: mv dist/BubbleUI.css dist/BubbleUI-v${{ steps.version.outputs.version }}.css
+      run: mv dist/bubble.ui.css dist/bubble.ui-v${{ steps.version.outputs.version }}.css
 
     - name: Create a Release of commit
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -33,7 +24,7 @@ jobs:
         repo_token: ${{ github.token }}
         automatic_release_tag: v${{ steps.version.outputs.version }}
         prerelease: false
-        title: ${{ steps.version.outputs.version }} - ${{ steps.version-name.outputs.version-name }}
+        title: ${{ steps.version.outputs.version }} 
         files: |
           LICENSE
           dist/*.css
