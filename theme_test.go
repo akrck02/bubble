@@ -51,6 +51,7 @@ func TestTextReadsOnEveryBackgroundOfEveryTheme(test *testing.T) {
 			expectContrast(test, theme, "quiet ink on "+ground.name, colors.InkQuiet, ground.color, textContrast)
 		}
 		expectContrast(test, theme, "ink on the accent tint", colors.Ink, colors.AccentTint, textContrast)
+		expectContrast(test, theme, "soft ink on the accent tint", colors.InkSoft, colors.AccentTint, textContrast)
 	}
 }
 
