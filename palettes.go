@@ -58,18 +58,28 @@ func neutralColors(style Style, mode Mode) Colors {
 // Text is measured over a panel over the ground and over each light, the worst cases.
 const glassBlur = 24
 
+// A wallpaper can be any picture, from black to white, so the veil over it is measured against
+// both: it keeps enough of the ground to carry every ink, and still lets the picture glow through.
+// By night the picture is dimmed first, as the first Valhalla's dark wallpapers were.
+const (
+	glassVeilOpacity = 0.72
+	nightDimming     = 0.45
+)
+
 func glassOf(mode Mode) Glass {
 	if mode == ModeLight {
 		return Glass{
 			Enabled: true, Blur: glassBlur,
 			Pane: white.WithAlpha(0.55), Raised: white.WithAlpha(0.85),
 			Glows: [2]Color{hex("#FFFFFF"), hex("#CBC6BB")},
+			Veil:  hex("#E6E3DC").WithAlpha(glassVeilOpacity), Dimming: 1,
 		}
 	}
 	return Glass{
 		Enabled: true, Blur: glassBlur,
 		Pane: white.WithAlpha(0.06), Raised: white.WithAlpha(0.12),
 		Glows: [2]Color{hex("#24272D"), hex("#181A1F")},
+		Veil:  hex("#0B0C0F").WithAlpha(glassVeilOpacity), Dimming: nightDimming,
 	}
 }
 
@@ -83,7 +93,7 @@ func glassColors(colors Colors, glass Glass, mode Mode) Colors {
 		colors.Sunken = colors.Background.Mix(colors.Ink, 0.06)
 		colors.Positive, colors.Warning, colors.Danger = hex("#17663F"), hex("#7A4900"), hex("#A1211A")
 	} else {
-		colors.Background, colors.Ink, colors.InkSoft, colors.InkQuiet = hex("#0B0C0F"), hex("#EDEEF0"), hex("#BDC1C8"), hex("#A9AEB6")
+		colors.Background, colors.Ink, colors.InkSoft, colors.InkQuiet = hex("#0B0C0F"), hex("#EDEEF0"), hex("#BDC1C8"), hex("#ADB2BA")
 		colors.ControlLine = hex("#8E949D")
 		colors.Line = white.WithAlpha(0.08).Over(colors.Background)
 		colors.Sunken = colors.Background.Mix(black, 0.4)

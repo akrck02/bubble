@@ -150,6 +150,7 @@ func glassProperties(theme Theme) []cssProperty {
 	return []cssProperty{
 		{"glass-pane", glass.Pane.Hex()}, {"glass-raised", glass.Raised.Hex()},
 		{"glass-glow-one", glass.Glows[0].Hex()}, {"glass-glow-two", glass.Glows[1].Hex()},
+		{"glass-veil", glass.Veil.Hex()}, {"glass-dimming", fmt.Sprintf("%g", glass.Dimming)},
 		{"glass-blur", pixels(glass.Blur)},
 	}
 }

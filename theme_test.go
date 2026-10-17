@@ -90,13 +90,14 @@ func TestStatusColoursReadAsText(test *testing.T) {
 	}
 }
 
-func TestTextOnGlassReadsOverTheGroundAndEachLight(test *testing.T) {
+func TestTextOnGlassReadsOverTheGroundEachLightAndAnyWallpaper(test *testing.T) {
 	for _, theme := range everyTheme(test) {
 		glass, colors := theme.Glass, theme.Colors
 		if !glass.Enabled {
 			continue
 		}
-		for _, behind := range []Color{colors.Background, glass.Glows[0], glass.Glows[1]} {
+		veiled := []Color{glass.Veil.Over(black), glass.Veil.Over(white.Shade(glass.Dimming))}
+		for _, behind := range append([]Color{colors.Background, glass.Glows[0], glass.Glows[1]}, veiled...) {
 			for _, fill := range []struct {
 				name  string
 				color Color
