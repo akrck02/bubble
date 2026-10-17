@@ -6,16 +6,20 @@ package bubble
 const pill = 999 // a corner so round that the ends become half circles
 
 func shapeOf(style Style, density Density) Shape {
-	shape := Shape{LineWidth: 1, FocusWidth: 2, FocusOffset: 4, ButtonRadius: pill}
+	shape := Shape{LineWidth: 1, FocusWidth: 2, FocusOffset: 4}
 	if style == StylePaper {
-		shape.ControlRadius, shape.CardRadius, shape.PanelRadius, shape.FloatingRadius = 10, 12, 16, pill
+		// Paper is cut, not moulded: buttons share the fields' medium corners, like cards on a desk.
+		shape.ControlRadius, shape.ButtonRadius, shape.CardRadius, shape.PanelRadius, shape.FloatingRadius = 10, 10, 12, 16, pill
 		shape.EdgeWidth = 2
 	} else {
-		shape.ControlRadius, shape.CardRadius, shape.PanelRadius, shape.FloatingRadius = 12, 20, 28, 16
+		shape.ControlRadius, shape.ButtonRadius, shape.CardRadius, shape.PanelRadius, shape.FloatingRadius = 12, pill, 20, 28, 16
 		shape.Elevated = true
 	}
 	if density == DensityCompact {
 		shape.ControlRadius *= 0.6
+		if shape.ButtonRadius != pill {
+			shape.ButtonRadius *= 0.6
+		}
 		shape.CardRadius *= 0.6
 		shape.PanelRadius *= 0.6
 		shape.FocusOffset = 2

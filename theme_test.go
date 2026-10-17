@@ -176,3 +176,15 @@ func TestABrightAccentKeepsTheLogosColourAndCarriesDarkText(test *testing.T) {
 		test.Error("white text on a gold accent; it should be dark")
 	}
 }
+
+func TestPaperButtonsHaveMediumCornersAndMaterialButtonsArePills(test *testing.T) {
+	for _, theme := range everyTheme(test) {
+		isPill := theme.Shape.ButtonRadius == pill
+		if theme.Options.Style == StylePaper && isPill {
+			test.Errorf("%s: paper buttons are pills", name(theme))
+		}
+		if theme.Options.Style == StyleMaterial && !isPill {
+			test.Errorf("%s: material buttons are not pills", name(theme))
+		}
+	}
+}
