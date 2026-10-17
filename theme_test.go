@@ -16,11 +16,13 @@ func everyTheme(test *testing.T) []Theme {
 		for _, mode := range []Mode{ModeLight, ModeDark} {
 			for _, density := range []Density{DensityComfortable, DensityCompact} {
 				for _, accent := range accentsToCheck {
-					theme, err := NewTheme(Options{Style: style, Mode: mode, Density: density, Accent: hex(accent), Glass: true})
-					if err != nil {
-						test.Fatalf("NewTheme(%s %s %s %s): %v", style, mode, density, accent, err)
+					for _, glass := range []bool{false, true} {
+						theme, err := NewTheme(Options{Style: style, Mode: mode, Density: density, Accent: hex(accent), Glass: glass})
+						if err != nil {
+							test.Fatalf("NewTheme(%s %s %s %s): %v", style, mode, density, accent, err)
+						}
+						themes = append(themes, theme)
 					}
-					themes = append(themes, theme)
 				}
 			}
 		}
@@ -29,7 +31,11 @@ func everyTheme(test *testing.T) []Theme {
 }
 
 func name(theme Theme) string {
-	return fmt.Sprintf("%s %s %s accent %s", theme.Options.Style, theme.Options.Mode, theme.Options.Density, theme.Options.Accent.Hex())
+	glass := ""
+	if theme.Glass.Enabled {
+		glass = " glass"
+	}
+	return fmt.Sprintf("%s%s %s %s accent %s", theme.Options.Style, glass, theme.Options.Mode, theme.Options.Density, theme.Options.Accent.Hex())
 }
 
 func expectContrast(test *testing.T, theme Theme, what string, first Color, second Color, minimum float64) {
@@ -84,14 +90,34 @@ func TestStatusColoursReadAsText(test *testing.T) {
 	}
 }
 
-func TestTextOnGlassReadsOverTheBackground(test *testing.T) {
+func TestTextOnGlassReadsOverTheGroundAndEachLight(test *testing.T) {
 	for _, theme := range everyTheme(test) {
-		if !theme.Glass.Enabled {
+		glass, colors := theme.Glass, theme.Colors
+		if !glass.Enabled {
 			continue
 		}
-		seen := theme.Glass.Surface.Over(theme.Colors.Background)
-		expectContrast(test, theme, "ink on glass", theme.Colors.Ink, seen, textContrast)
-		expectContrast(test, theme, "soft ink on glass", theme.Colors.InkSoft, seen, textContrast)
+		for _, behind := range []Color{colors.Background, glass.Glows[0], glass.Glows[1]} {
+			for _, fill := range []struct {
+				name  string
+				color Color
+			}{{"a pane", glass.Pane}, {"a raised pane", glass.Raised}} {
+				seen := fill.color.Over(behind)
+				where := fill.name + " over " + behind.Hex()
+				expectContrast(test, theme, "ink on "+where, colors.Ink, seen, textContrast)
+				expectContrast(test, theme, "soft ink on "+where, colors.InkSoft, seen, textContrast)
+				expectContrast(test, theme, "quiet ink on "+where, colors.InkQuiet, seen, textContrast)
+				expectContrast(test, theme, "the edge of a field on "+where, colors.ControlLine, seen, controlContrast)
+				expectContrast(test, theme, "the focus ring on "+where, colors.FocusRing, seen, controlContrast)
+			}
+		}
+	}
+}
+
+func TestOnGlassWhatIsChosenIsBrighterNotColoured(test *testing.T) {
+	for _, theme := range everyTheme(test) {
+		if theme.Glass.Enabled && theme.Colors.AccentTint != theme.Glass.Raised.Over(theme.Colors.Background) {
+			test.Errorf("%s: the chosen fill is %s, not the raised pane", name(theme), theme.Colors.AccentTint.Hex())
+		}
 	}
 }
 

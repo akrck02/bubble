@@ -131,12 +131,13 @@ type Motion struct {
 	Slow   time.Duration
 }
 
-// Glass holds the frosted panels of the glass variant; Enabled is false outside it.
+// Glass holds the crystalline panels of the glass variant; Enabled is false outside it.
 type Glass struct {
 	Enabled bool
-	Surface Color   // a translucent surface; text on it still reads because of its opacity
-	Line    Color   // a thin light edge around a glass panel
-	Blur    float64 // how much of what is behind shows through, in layout pixels
+	Pane    Color    // the translucent fill of panels, cards and fields, with no outline
+	Raised  Color    // a brighter fill, for what is hovered or chosen
+	Glows   [2]Color // the two soft lights behind the panels, drawn blurred on the ground
+	Blur    float64  // how much of what is behind shows through, in layout pixels
 }
 
 // NewTheme makes the theme of the given options.
@@ -145,6 +146,11 @@ func NewTheme(options Options) (Theme, error) {
 		return Theme{}, err
 	}
 	base := baseColors(options.Style, options.Mode)
+	var glass Glass
+	if options.Glass && options.Style == StylePaper {
+		glass = glassOf(options.Mode)
+		base = glassColors(base, glass, options.Mode)
+	}
 	theme := Theme{
 		Options: options,
 		Colors:  withAccent(base, options),
@@ -153,8 +159,9 @@ func NewTheme(options Options) (Theme, error) {
 		Space:   spaceOf(options.Density),
 		Motion:  Motion{Fast: 250 * time.Millisecond, Medium: 500 * time.Millisecond, Slow: 750 * time.Millisecond},
 	}
-	if options.Glass && options.Style == StylePaper {
-		theme.Glass = glassOf(theme.Colors)
+	if glass.Enabled {
+		theme.Glass = glass
+		theme.Colors = soberAccent(theme.Colors, glass, options.Mode)
 	}
 	return theme, nil
 }

@@ -19,7 +19,7 @@ func CSS(writer io.Writer, accent Color) error {
 			return err
 		}
 	}
-	text.WriteString(glassCSS)
+	text.WriteString(solidGlassCSS)
 	_, err := io.WriteString(writer, text.String())
 	return err
 }
@@ -43,6 +43,11 @@ func cssBlocks(accent Color) []cssBlock {
 	every := []func(Theme) []cssProperty{colorProperties, shapeProperties, typeProperties, spaceProperties, motionProperties}
 	colorsOnly := []func(Theme) []cssProperty{colorProperties}
 	compactOnly := []func(Theme) []cssProperty{shapeProperties, typeProperties, spaceProperties}
+	glassParts := []func(Theme) []cssProperty{colorProperties, glassProperties}
+	glassy := func(options Options) Options {
+		options.Glass = true
+		return options
+	}
 	return []cssBlock{
 		{selector: ":root", options: options(StylePaper, ModeLight, DensityComfortable), parts: every},
 		{selector: ":root[data-mode=\"dark\"]", darkByMedia: true, options: options(StylePaper, ModeDark, DensityComfortable), parts: colorsOnly},
@@ -50,6 +55,9 @@ func cssBlocks(accent Color) []cssBlock {
 		{selector: ":root[data-style=\"material\"][data-mode=\"dark\"]", darkByMedia: true, options: options(StyleMaterial, ModeDark, DensityComfortable), parts: colorsOnly},
 		{selector: ":root[data-density=\"compact\"]", options: options(StylePaper, ModeLight, DensityCompact), parts: compactOnly},
 		{selector: ":root[data-style=\"material\"][data-density=\"compact\"]", options: options(StyleMaterial, ModeLight, DensityCompact), parts: []func(Theme) []cssProperty{shapeProperties}},
+		// Glass comes last and weighs more, so it wins over the paper it reimagines.
+		{selector: ":root[data-glass]", options: glassy(options(StylePaper, ModeLight, DensityComfortable)), parts: glassParts},
+		{selector: ":root[data-glass][data-mode=\"dark\"]", darkByMedia: true, options: glassy(options(StylePaper, ModeDark, DensityComfortable)), parts: glassParts},
 	}
 }
 
@@ -137,18 +145,22 @@ func motionProperties(theme Theme) []cssProperty {
 	}
 }
 
-// The glass variant mixes its tokens from whichever theme is on, with the amounts of glassOf.
-var glassCSS = fmt.Sprintf(`
-:root[data-glass] {
-  --glass-surface: color-mix(in srgb, var(--surface) %g%%, transparent);
-  --glass-line: color-mix(in srgb, var(--ink) %g%%, transparent);
-  --glass-blur: %gpx;
+func glassProperties(theme Theme) []cssProperty {
+	glass := theme.Glass
+	return []cssProperty{
+		{"glass-pane", glass.Pane.Hex()}, {"glass-raised", glass.Raised.Hex()},
+		{"glass-glow-one", glass.Glows[0].Hex()}, {"glass-glow-two", glass.Glows[1].Hex()},
+		{"glass-blur", pixels(glass.Blur)},
+	}
 }
 
+// When the system asks for less transparency, panels become their solid surface and stop blurring.
+const solidGlassCSS = `
 @media (prefers-reduced-transparency: reduce) {
   :root[data-glass] {
-    --glass-surface: var(--surface);
+    --glass-pane: var(--surface);
+    --glass-raised: var(--accent-tint);
     --glass-blur: 0px;
   }
 }
-`, glassSurfaceOpacity*100, glassLineOpacity*100, float64(glassBlur))
+`

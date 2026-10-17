@@ -52,14 +52,57 @@ func neutralColors(style Style, mode Mode) Colors {
 	}
 }
 
-// Glass keeps 60 % of the surface, so text still reads whatever is behind it, and a faint line of
-// ink around it. The CSS mixes the same amounts from the surface and ink of whichever theme is on.
-const (
-	glassSurfaceOpacity = 0.6
-	glassLineOpacity    = 0.12
-	glassBlur           = 24
-)
+// Glass is not paper made transparent: it is paper's standards reimagined on glass, after the
+// first Valhalla. Panels are crystalline fills with no outline, told apart by how bright they
+// are; the ground is near black by night and a pale frost by day, lit by two soft, sober lights.
+// Text is measured over a panel over the ground and over each light, the worst cases.
+const glassBlur = 24
 
-func glassOf(colors Colors) Glass {
-	return Glass{Enabled: true, Surface: colors.Surface.WithAlpha(glassSurfaceOpacity), Line: colors.Ink.WithAlpha(glassLineOpacity), Blur: glassBlur}
+func glassOf(mode Mode) Glass {
+	if mode == ModeLight {
+		return Glass{
+			Enabled: true, Blur: glassBlur,
+			Pane: white.WithAlpha(0.55), Raised: white.WithAlpha(0.85),
+			Glows: [2]Color{hex("#FFFFFF"), hex("#CBC6BB")},
+		}
+	}
+	return Glass{
+		Enabled: true, Blur: glassBlur,
+		Pane: white.WithAlpha(0.06), Raised: white.WithAlpha(0.12),
+		Glows: [2]Color{hex("#24272D"), hex("#181A1F")},
+	}
+}
+
+// glassColors gives the neutral colours of glass: its own ground and inks, and the solid surface a
+// panel becomes when the system asks for less transparency.
+func glassColors(colors Colors, glass Glass, mode Mode) Colors {
+	if mode == ModeLight {
+		colors.Background, colors.Ink, colors.InkSoft, colors.InkQuiet = hex("#E6E3DC"), hex("#1C1F24"), hex("#4A4F57"), hex("#585D65")
+		colors.ControlLine = hex("#77726A")
+		colors.Line = colors.Ink.WithAlpha(0.1).Over(colors.Background)
+		colors.Sunken = colors.Background.Mix(colors.Ink, 0.06)
+		colors.Positive, colors.Warning, colors.Danger = hex("#17663F"), hex("#7A4900"), hex("#A1211A")
+	} else {
+		colors.Background, colors.Ink, colors.InkSoft, colors.InkQuiet = hex("#0B0C0F"), hex("#EDEEF0"), hex("#BDC1C8"), hex("#A9AEB6")
+		colors.ControlLine = hex("#8E949D")
+		colors.Line = white.WithAlpha(0.08).Over(colors.Background)
+		colors.Sunken = colors.Background.Mix(black, 0.4)
+	}
+	colors.Surface = glass.Pane.Over(colors.Background)
+	return colors
+}
+
+// soberAccent keeps the accent for the main action, the focus ring and links, and makes the
+// chosen state neutral: on glass, what is chosen is brighter, not coloured.
+func soberAccent(colors Colors, glass Glass, mode Mode) Colors {
+	colors.AccentTint = glass.Raised.Over(colors.Background)
+	target := white
+	if mode == ModeLight {
+		target = black
+	}
+	colors.AccentInk = towardUntil(colors.AccentInk, target, func(candidate Color) bool {
+		return Contrast(candidate, colors.Background) >= textContrast && Contrast(candidate, colors.AccentTint) >= textContrast
+	})
+	colors.FocusRing = colors.AccentInk
+	return colors
 }
