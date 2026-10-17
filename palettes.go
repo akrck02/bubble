@@ -52,9 +52,14 @@ func neutralColors(style Style, mode Mode) Colors {
 	}
 }
 
-func glassOf(colors Colors, mode Mode) Glass {
-	if mode == ModeLight {
-		return Glass{Enabled: true, Surface: colors.Surface.WithAlpha(0.55), Line: colors.Ink.WithAlpha(0.12), Blur: 24}
-	}
-	return Glass{Enabled: true, Surface: colors.Surface.WithAlpha(0.6), Line: hex("#FFFFFF").WithAlpha(0.1), Blur: 24}
+// Glass keeps 60 % of the surface, so text still reads whatever is behind it, and a faint line of
+// ink around it. The CSS mixes the same amounts from the surface and ink of whichever theme is on.
+const (
+	glassSurfaceOpacity = 0.6
+	glassLineOpacity    = 0.12
+	glassBlur           = 24
+)
+
+func glassOf(colors Colors) Glass {
+	return Glass{Enabled: true, Surface: colors.Surface.WithAlpha(glassSurfaceOpacity), Line: colors.Ink.WithAlpha(glassLineOpacity), Blur: glassBlur}
 }

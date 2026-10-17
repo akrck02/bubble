@@ -159,3 +159,17 @@ func TestBlackAndWhiteHaveTheHighestContrast(test *testing.T) {
 		test.Errorf("black on white: %.2f, want 21", ratio)
 	}
 }
+
+func TestABrightAccentKeepsTheLogosColourAndCarriesDarkText(test *testing.T) {
+	gold := hex("#F6BD60")
+	theme, err := NewTheme(Options{Style: StylePaper, Mode: ModeLight, Density: DensityComfortable, Accent: gold})
+	if err != nil {
+		test.Fatal(err)
+	}
+	if theme.Colors.Accent != gold {
+		test.Errorf("accent %s, want the logo's own %s", theme.Colors.Accent.Hex(), gold.Hex())
+	}
+	if theme.Colors.OnAccent == white {
+		test.Error("white text on a gold accent; it should be dark")
+	}
+}

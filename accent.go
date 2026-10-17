@@ -31,13 +31,18 @@ func withAccent(colors Colors, options Options) Colors {
 	return darkAccent(colors, options)
 }
 
-// In light mode the accent is a dark fill under white text.
+// In light mode a dark accent carries white text. A bright one (a yellow, a gold) keeps the logo's
+// own colour and carries dark text instead, as Material does: darkening it would turn it brown.
 func lightAccent(colors Colors, options Options) Colors {
-	fill := towardUntil(options.Accent, black, func(candidate Color) bool {
-		return Contrast(candidate, white) >= textContrast
-	})
+	fill, onFill := options.Accent, onDarkAccent
+	if Contrast(options.Accent, white) >= textContrast || Contrast(options.Accent, onDarkAccent) < textContrast {
+		onFill = white
+		fill = towardUntil(options.Accent, black, func(candidate Color) bool {
+			return Contrast(candidate, white) >= textContrast
+		})
+	}
 	colors.Accent = fill
-	colors.OnAccent = white
+	colors.OnAccent = onFill
 	colors.AccentEdge = fill.Shade(edgeShade)
 	colors.AccentSide = fill.Shade(sideShade)
 	colors.AccentTint = readableTint(fill.Mix(tintBase(colors, options.Style), tintAmount(options.Style)), colors)

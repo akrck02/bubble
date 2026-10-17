@@ -154,7 +154,7 @@ func NewTheme(options Options) (Theme, error) {
 		Motion:  Motion{Fast: 250 * time.Millisecond, Medium: 500 * time.Millisecond, Slow: 750 * time.Millisecond},
 	}
 	if options.Glass && options.Style == StylePaper {
-		theme.Glass = glassOf(theme.Colors, options.Mode)
+		theme.Glass = glassOf(theme.Colors)
 	}
 	return theme, nil
 }
