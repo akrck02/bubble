@@ -78,6 +78,7 @@ func TestStatusColoursReadAsText(test *testing.T) {
 		expectContrast(test, theme, "positive", colors.Positive, colors.Background, textContrast)
 		expectContrast(test, theme, "warning", colors.Warning, colors.Background, textContrast)
 		expectContrast(test, theme, "danger", colors.Danger, colors.Background, textContrast)
+		expectContrast(test, theme, "danger on a surface", colors.Danger, colors.Surface, textContrast)
 	}
 }
 
