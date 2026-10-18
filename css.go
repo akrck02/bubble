@@ -145,9 +145,13 @@ func motionProperties(theme Theme) []cssProperty {
 	}
 }
 
+// On glass nothing is opaque: what other styles sink (pills, keys, a hovered row) takes the
+// raised pane instead, whose contrast is tested over the ground, the lights and any wallpaper.
+// It comes after the colours, so it wins over their solid sunken.
 func glassProperties(theme Theme) []cssProperty {
 	glass := theme.Glass
 	return []cssProperty{
+		{"sunken", glass.Raised.Hex()},
 		{"glass-pane", glass.Pane.Hex()}, {"glass-raised", glass.Raised.Hex()},
 		{"glass-glow-one", glass.Glows[0].Hex()}, {"glass-glow-two", glass.Glows[1].Hex()},
 		{"glass-veil", glass.Veil.Hex()}, {"glass-dimming", fmt.Sprintf("%g", glass.Dimming)},
@@ -161,6 +165,7 @@ const solidGlassCSS = `
   :root[data-glass] {
     --glass-pane: var(--surface);
     --glass-raised: var(--accent-tint);
+    --sunken: var(--accent-tint);
     --glass-blur: 0px;
   }
 }
