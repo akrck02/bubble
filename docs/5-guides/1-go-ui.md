@@ -1,0 +1,92 @@
+# Drawing go-ui in Bubble
+
+[go-ui](https://github.com/akrck02/go-ui) draws interfaces in Go, over a go-renderer window. Its
+theme has a token for everything a design system decides, and module `goui` fills them from a
+Bubble theme, so **every go-ui control wears Bubble** and a screen looks the same in a browser and
+in a go-ui window.
+
+`goui` is a module of its own (`goui/go.mod`): Bubble's package stays free of go-ui, so making CSS
+needs nothing of it, and go-ui knows nothing of Bubble.
+
+> **Status:** in development, like Bubble 4 itself. go-ui and go-renderer are not published yet:
+> `goui` builds against copies cloned next to Bubble.
+
+## The shortest way
+
+```go
+import (
+	"github.com/akrck02/bubble"
+	"github.com/akrck02/bubble/goui"
+)
+
+accent, _ := bubble.ParseColor("#81D4FA") // the main colour of your logo
+theme, err := bubble.NewTheme(bubble.Options{
+	Style: bubble.StylePaper, Mode: bubble.ModeLight,
+	Density: bubble.DensityComfortable, Accent: accent,
+})
+if err != nil {
+	return err
+}
+context.Theme = goui.Theme(theme) // before the first control of the frame
+```
+
+Buttons, lists, fields and check boxes now follow Bubble: the main button on its edge, what is
+chosen brighter and never coloured, Bubble's line heights and drawn check box.
+
+## The same screen, twice
+
+`goui/cmd/showcase` is one screen written twice: with go-ui (`main.go`) and in HTML with Bubble's
+CSS (`web.html`). On the left of each pair the browser, on the right go-ui:
+
+![Paper by day: the browser and go-ui side by side, the same index, swatches, buttons and lists](../images/bubble-paper-light.jpg)
+
+![Paper at night](../images/bubble-paper-dark.jpg)
+
+![Material by day, with the rail of icons and pill buttons](../images/bubble-material-light.jpg)
+
+![Material at night](../images/bubble-material-dark.jpg)
+
+![Glass by day: crystal panes over a pale frost](../images/bubble-glass-light.jpg)
+
+![Glass at night: crystal panes over a near black ground](../images/bubble-glass-dark.jpg)
+
+Between 4 and 6 % of the pixels differ, mostly along the edges of letters, where each engine
+smooths text its own way. To draw the pairs again and count them:
+
+```bash
+goui/cmd/showcase/compare.sh pictures/   # needs go-ui and go-renderer next to Bubble, Chrome, ImageMagick
+```
+
+It prints one line per style and finish, such as `glass-dark: 3.8% of pixels differ`, and leaves the
+pairs in `pictures/side-*.png`.
+
+Three differences are on purpose, or still to do:
+
+- **A check box's row is 44 pixels tall** in go-ui, a finger's size, as Bubble asks of touch
+  targets; the web page lets the box alone be the target.
+- **A secondary button** is filled with the surface in go-ui and clear in the browser: on
+  Material's tinted cards it shows.
+- **A text field** keeps its text a little closer to the edge in go-ui.
+
+## Glass
+
+Ask Bubble for glass and paint its ground under the interface, the window's size:
+
+```go
+theme, _ := bubble.NewTheme(bubble.Options{Style: bubble.StylePaper, Mode: bubble.ModeDark,
+	Density: bubble.DensityComfortable, Accent: accent, Glass: true})
+ground := draw2d.NewImage(goui.Ground(theme, width, height)) // once
+
+window.Run(options, func(context *ui.Context) {
+	context.Theme = goui.Theme(theme)
+	context.Image(ground, ui.Layout{Width: ui.Grow(), Height: ui.Grow()}, 0)
+	context.Overlay("screen", ui.LayerOptions{Width: ui.Fixed(width), Height: ui.Fixed(height)}, func() {
+		// the interface, over the ground
+	})
+})
+```
+
+`goui.Theme` makes surfaces and wells the translucent panes, as Bubble's CSS does. The browser
+blurs what is behind a pane; go-ui does not yet, but glass's own ground is smooth, so blurring it
+would change nothing. Over a photograph, or over other text, it would: that is still to come in
+go-renderer.
