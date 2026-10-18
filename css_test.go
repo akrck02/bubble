@@ -63,34 +63,102 @@ func TestOnGlassNothingIsOpaqueUnlessTheSystemAsksForLessTransparency(test *test
 	}
 }
 
-// cssRule is one block of bubble.css: its selector and what it declares.
+// cssRule is one block of bubble.css: its selectors and what it declares.
 var cssRule = regexp.MustCompile(`([^{}]+)\{([^{}]*)\}`)
 
 // aState marks a selector that only changes a part another rule already draws: a state, such as
 // hover, or a style or finish (:root[data-glass]) repainting a part whose own rule pairs it.
-var aState = regexp.MustCompile(`:(hover|active|focus|focus-visible|focus-within|checked|disabled|has|not)|::|^:root\[data-`)
+var aState = regexp.MustCompile(`:(hover|active|focus|focus-visible|focus-within|checked|disabled)|::|^:root\[data-`)
+
+// aFill finds a background, up to the end of its declaration or of the block.
+var aFill = regexp.MustCompile(`(?:^|;)\s*background(?:-color)?:\s*([^;]+)`)
 
 // aColour finds a text colour among a rule's declarations.
-var aColour = regexp.MustCompile(`(?m)(^|;)\s*color:`)
+var aColour = regexp.MustCompile(`(?:^|;)\s*color:`)
 
-// aFill finds a background that paints something, not one that lets the parent show through.
-var aFill = regexp.MustCompile(`(?m)(?:^|;)\s*background:\s*([^;]+);`)
+// aComment is a CSS comment, which may sit before a rule and is not part of its selectors.
+var aComment = regexp.MustCompile(`(?s)/\*.*?\*/`)
 
 func TestEveryRuleWithABackgroundSetsAColour(test *testing.T) {
+	for _, rule := range cssRules(test) {
+		fill := aFill.FindStringSubmatch(rule.declarations)
+		if fill == nil || paintsNothing(strings.TrimSpace(fill[1])) || onlyStates(rule.selectors) {
+			continue
+		}
+		if !aColour.MatchString(rule.declarations) {
+			test.Errorf("%s paints a background (%s) but sets no text colour", strings.Join(rule.selectors, ", "), strings.TrimSpace(fill[1]))
+		}
+	}
+}
+
+func TestTheFocusRingNeverFloatsAwayFromTheControl(test *testing.T) {
+	allowed := map[string]bool{
+		"var(--focus-offset)":           true, // 0 in every theme: see TestTheFocusRingTouchesTheControl
+		"calc(var(--line-width) * -1)":  true, // a field: the ring lies on its own edge
+		"calc(var(--focus-width) * -2)": true, // filled with the accent: the ring is drawn inside
+	}
+	for _, rule := range cssRules(test) {
+		for _, offset := range regexp.MustCompile(`outline-offset:\s*([^;]+)`).FindAllStringSubmatch(rule.declarations, -1) {
+			value := strings.TrimSpace(offset[1])
+			if allowed[value] || (value == "2px" && strings.Contains(strings.Join(rule.selectors, ","), ":checked:focus-visible")) {
+				continue
+			}
+			test.Errorf("%s puts the focus ring %s away from the control", strings.Join(rule.selectors, ", "), value)
+		}
+	}
+}
+
+// aRule is one block of bubble.css, its selectors split one by one.
+type aRule struct {
+	selectors    []string
+	declarations string
+}
+
+// cssRules reads bubble.css into its rules; a rule nested in @media is read like any other.
+func cssRules(test *testing.T) []aRule {
 	stylesheet, err := os.ReadFile("css/bubble.css")
 	if err != nil {
 		test.Fatal(err)
 	}
-	for _, rule := range cssRule.FindAllStringSubmatch(string(stylesheet), -1) {
-		selector, declarations := strings.TrimSpace(rule[1]), rule[2]
-		fill := aFill.FindStringSubmatch(declarations)
-		if fill == nil || aState.MatchString(lastLine(selector)) || paintsNothing(fill[1]) {
-			continue
+	var rules []aRule
+	for _, match := range cssRule.FindAllStringSubmatch(aComment.ReplaceAllString(string(stylesheet), ""), -1) {
+		var selectors []string
+		for _, selector := range splitSelectors(match[1]) {
+			selectors = append(selectors, strings.TrimSpace(selector))
 		}
-		if !aColour.MatchString(declarations) {
-			test.Errorf("%s paints a background (%s) but sets no text colour", lastLine(selector), fill[1])
+		rules = append(rules, aRule{selectors: selectors, declarations: match[2]})
+	}
+	return rules
+}
+
+// splitSelectors splits a selector list at its own commas, not at those inside :is(…) or :not(…).
+func splitSelectors(list string) []string {
+	var selectors []string
+	depth, start := 0, 0
+	for index, character := range list {
+		switch character {
+		case '(':
+			depth++
+		case ')':
+			depth--
+		case ',':
+			if depth == 0 {
+				selectors = append(selectors, list[start:index])
+				start = index + 1
+			}
 		}
 	}
+	return append(selectors, list[start:])
+}
+
+// onlyStates tells whether every selector of a rule only changes a part another rule draws.
+func onlyStates(selectors []string) bool {
+	for _, selector := range selectors {
+		if !aState.MatchString(selector) {
+			return false
+		}
+	}
+	return true
 }
 
 func TestAFieldLightsItsOwnEdgeWhenWrittenIn(test *testing.T) {
@@ -107,16 +175,13 @@ func TestAFieldLightsItsOwnEdgeWhenWrittenIn(test *testing.T) {
 		if !strings.Contains(block, "border-color: var(--focus-ring)") {
 			test.Errorf("%s does not light its own edge", selector)
 		}
+		if !strings.Contains(block, "outline-offset: calc(var(--line-width) * -1)") {
+			test.Errorf("%s does not lay the ring on its own edge", selector)
+		}
 	}
 }
 
 // paintsNothing tells whether a background value leaves what is behind it to show.
 func paintsNothing(value string) bool {
 	return value == "transparent" || value == "none" || strings.HasPrefix(value, "var(--wallpaper")
-}
-
-// lastLine keeps the last selector of a list, enough to find the rule in the file.
-func lastLine(selector string) string {
-	lines := strings.Split(selector, "\n")
-	return strings.TrimSpace(lines[len(lines)-1])
 }

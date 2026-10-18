@@ -249,3 +249,14 @@ func TestTheFocusRingTouchesTheControl(test *testing.T) {
 		}
 	}
 }
+
+// The ring touches the controls it marks, so it must stand out from their fill too. Controls filled
+// with the accent are the exception: their ring is drawn inside them in the text colour of the
+// accent, which TestTheAccentReadsWhateverColourTheLogoIs already checks.
+func TestTheFocusRingStandsOutFromTheSurfacesItTouches(test *testing.T) {
+	for _, theme := range everyTheme(test) {
+		colors := theme.Colors
+		expectContrast(test, theme, "focus ring on a surface", colors.FocusRing, colors.Surface, controlContrast)
+		expectContrast(test, theme, "focus ring on a sunken fill", colors.FocusRing, colors.Sunken, controlContrast)
+	}
+}
