@@ -33,6 +33,13 @@ context.Theme = goui.Theme(theme) // before the first control of the frame
 Buttons, lists, fields and check boxes now follow Bubble: the main button on its edge, what is
 chosen brighter and never coloured, Bubble's line heights and drawn check box.
 
+The focus follows Bubble too. It shows only when the keyboard brought it, as a ring on the
+control's edge with no gap: inside the main button, in the colour of its text. A field lights its
+own edge while it is typed in, and a held button shrinks to 0.97. go-ui only reads Tab, Enter and
+Space while the interface has the keyboard, so a 3D view keeps them. A program that is only an
+interface sets `context.KeyboardNavigation = ui.Always`. If the system asks for less motion, set
+`context.LessMotion` and held buttons keep their size.
+
 ## The same screen, twice
 
 `goui/cmd/showcase` is one screen written twice: with go-ui (`main.go`) and in HTML with Bubble's

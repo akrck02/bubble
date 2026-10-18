@@ -126,6 +126,7 @@ func (showcase *screen) material() bool { return showcase.design.Options.Style =
 
 func (showcase *screen) draw(context *ui.Context) {
 	context.Theme = showcase.theme
+	context.KeyboardNavigation = ui.Always // the showcase is only an interface: Tab walks every control
 	if showcase.ground == nil {
 		showcase.frame(context)
 		return

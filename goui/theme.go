@@ -27,6 +27,7 @@ const (
 	checkBorder       = 2    // its edge
 	checkMark         = 14   // its tick
 	glassFieldEdge    = 0.16 // a glass field's soft edge: this much ink over nothing
+	pressScale        = 0.97 // a held button, as .button:active scales it
 )
 
 // Theme turns a Bubble theme into go-ui's. The colours carry the same names, mostly; the sizes come
@@ -65,6 +66,9 @@ func Theme(theme bubble.Theme) ui.Theme {
 
 	result.CheckSize, result.CheckRadius, result.CheckBorder, result.CheckMark = checkSize, checkRadius, checkBorder, checkMark
 	result.CheckLine, result.CheckedBorder = result.ControlLine, result.PrimaryEdge
+
+	// Focus lights the control's own edge, as Bubble's CSS does; pressing gives a little.
+	result.FocusWidth, result.FieldFocusEdge, result.PressScale = float32(shape.FocusWidth), true, pressScale
 
 	if theme.Glass.Enabled {
 		glassy(&result, theme)

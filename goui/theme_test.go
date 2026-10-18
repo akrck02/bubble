@@ -85,3 +85,14 @@ func TestOnGlassPanelsAndWellsAreTheTranslucentPanes(t *testing.T) {
 		t.Fatal("paper without glass blurs nothing")
 	}
 }
+
+func TestABubbleThemeLightsFieldsAndShrinksWhenPressed(t *testing.T) {
+	theme := themeFor(t, bubble.StylePaper, bubble.ModeLight, false)
+	result := Theme(theme)
+	if result.FocusWidth != float32(theme.Shape.FocusWidth) || !result.FieldFocusEdge {
+		t.Fatalf("the focus is Bubble's: a %v pixel ring on the edge, fields lighting their own (%v)", result.FocusWidth, result.FieldFocusEdge)
+	}
+	if result.PressScale != 0.97 {
+		t.Fatalf("a held control is drawn at 0.97, as Bubble's CSS presses it: %v", result.PressScale)
+	}
+}
