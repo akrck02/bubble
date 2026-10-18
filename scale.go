@@ -6,7 +6,8 @@ package bubble
 const pill = 999 // a corner so round that the ends become half circles
 
 func shapeOf(style Style, density Density) Shape {
-	shape := Shape{LineWidth: 1, FocusWidth: 2, FocusOffset: 4}
+	// The focus ring sits on the control's own edge, with no gap: the edge lights up (after Bubble 3).
+	shape := Shape{LineWidth: 1, FocusWidth: 2}
 	if style == StylePaper {
 		// Paper is cut, not moulded: buttons share the fields' medium corners, like cards on a desk.
 		shape.ControlRadius, shape.ButtonRadius, shape.CardRadius, shape.PanelRadius, shape.FloatingRadius = 10, 10, 12, 16, pill
@@ -22,7 +23,6 @@ func shapeOf(style Style, density Density) Shape {
 		}
 		shape.CardRadius *= 0.6
 		shape.PanelRadius *= 0.6
-		shape.FocusOffset = 2
 	}
 	return shape
 }

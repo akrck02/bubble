@@ -241,3 +241,11 @@ func TestPaperButtonsHaveMediumCornersAndMaterialButtonsArePills(test *testing.T
 		}
 	}
 }
+
+func TestTheFocusRingTouchesTheControl(test *testing.T) {
+	for _, theme := range everyTheme(test) {
+		if theme.Shape.FocusOffset != 0 {
+			test.Errorf("%s: the focus ring floats %v pixels away from the control", name(theme), theme.Shape.FocusOffset)
+		}
+	}
+}

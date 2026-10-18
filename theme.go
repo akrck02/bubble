@@ -99,7 +99,7 @@ type Shape struct {
 	LineWidth      float64
 	EdgeWidth      float64 // the block edge under primary buttons; 0 when the style has none
 	FocusWidth     float64
-	FocusOffset    float64 // the gap between a control and its focus ring
+	FocusOffset    float64 // the gap between a control and its focus ring: none, the edge lights up
 	Elevated       bool    // whether raised things cast a shadow (material) or sit on a line (paper)
 }
 

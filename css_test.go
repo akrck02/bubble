@@ -62,3 +62,61 @@ func TestOnGlassNothingIsOpaqueUnlessTheSystemAsksForLessTransparency(test *test
 		test.Error("with less transparency, the sunken colour does not become solid")
 	}
 }
+
+// cssRule is one block of bubble.css: its selector and what it declares.
+var cssRule = regexp.MustCompile(`([^{}]+)\{([^{}]*)\}`)
+
+// aState marks a selector that only changes a part another rule already draws: a state, such as
+// hover, or a style or finish (:root[data-glass]) repainting a part whose own rule pairs it.
+var aState = regexp.MustCompile(`:(hover|active|focus|focus-visible|focus-within|checked|disabled|has|not)|::|^:root\[data-`)
+
+// aColour finds a text colour among a rule's declarations.
+var aColour = regexp.MustCompile(`(?m)(^|;)\s*color:`)
+
+// aFill finds a background that paints something, not one that lets the parent show through.
+var aFill = regexp.MustCompile(`(?m)(?:^|;)\s*background:\s*([^;]+);`)
+
+func TestEveryRuleWithABackgroundSetsAColour(test *testing.T) {
+	stylesheet, err := os.ReadFile("css/bubble.css")
+	if err != nil {
+		test.Fatal(err)
+	}
+	for _, rule := range cssRule.FindAllStringSubmatch(string(stylesheet), -1) {
+		selector, declarations := strings.TrimSpace(rule[1]), rule[2]
+		fill := aFill.FindStringSubmatch(declarations)
+		if fill == nil || aState.MatchString(lastLine(selector)) || paintsNothing(fill[1]) {
+			continue
+		}
+		if !aColour.MatchString(declarations) {
+			test.Errorf("%s paints a background (%s) but sets no text colour", lastLine(selector), fill[1])
+		}
+	}
+}
+
+func TestAFieldLightsItsOwnEdgeWhenWrittenIn(test *testing.T) {
+	stylesheet, err := os.ReadFile("css/bubble.css")
+	if err != nil {
+		test.Fatal(err)
+	}
+	for _, selector := range []string{".field :is(input, textarea, select):focus-visible {", ".search-box:focus-within {"} {
+		start := strings.Index(string(stylesheet), selector)
+		if start == -1 {
+			test.Fatalf("bubble.css has no %s", selector)
+		}
+		block := string(stylesheet[start : start+strings.Index(string(stylesheet[start:]), "}")])
+		if !strings.Contains(block, "border-color: var(--focus-ring)") {
+			test.Errorf("%s does not light its own edge", selector)
+		}
+	}
+}
+
+// paintsNothing tells whether a background value leaves what is behind it to show.
+func paintsNothing(value string) bool {
+	return value == "transparent" || value == "none" || strings.HasPrefix(value, "var(--wallpaper")
+}
+
+// lastLine keeps the last selector of a list, enough to find the rule in the file.
+func lastLine(selector string) string {
+	lines := strings.Split(selector, "\n")
+	return strings.TrimSpace(lines[len(lines)-1])
+}
