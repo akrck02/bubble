@@ -60,6 +60,14 @@ const glassBlur = 24
 
 // A wallpaper can be any picture, from black to white, so the veil over it is measured against
 // both: it keeps enough of the ground to carry every ink, and still lets the picture glow through.
+// A dialog floats over other text, which may be anything from black to white: its fill is dense
+// enough to carry every ink over both, behind the scrim, and lets only a blur of the page through.
+// By day a dark page behind shows more, so the frost is a little denser.
+const (
+	glassDialogOpacity = 0.86
+	frostDialogOpacity = 0.9
+)
+
 // By night the picture is dimmed first, as the first Valhalla's dark wallpapers were.
 const (
 	glassVeilOpacity = 0.72
@@ -71,15 +79,17 @@ func glassOf(mode Mode) Glass {
 		return Glass{
 			Enabled: true, Blur: glassBlur,
 			Pane: white.WithAlpha(0.55), Raised: white.WithAlpha(0.85),
-			Glows: [2]Color{hex("#FFFFFF"), hex("#CBC6BB")},
-			Veil:  hex("#E6E3DC").WithAlpha(glassVeilOpacity), Dimming: 1,
+			Dialog: hex("#EFECE6").WithAlpha(frostDialogOpacity),
+			Glows:  [2]Color{hex("#FFFFFF"), hex("#CBC6BB")},
+			Veil:   hex("#E6E3DC").WithAlpha(glassVeilOpacity), Dimming: 1,
 		}
 	}
 	return Glass{
 		Enabled: true, Blur: glassBlur,
 		Pane: white.WithAlpha(0.06), Raised: white.WithAlpha(0.12),
-		Glows: [2]Color{hex("#24272D"), hex("#181A1F")},
-		Veil:  hex("#0B0C0F").WithAlpha(glassVeilOpacity), Dimming: nightDimming,
+		Dialog: hex("#16181D").WithAlpha(glassDialogOpacity),
+		Glows:  [2]Color{hex("#24272D"), hex("#181A1F")},
+		Veil:   hex("#0B0C0F").WithAlpha(glassVeilOpacity), Dimming: nightDimming,
 	}
 }
 

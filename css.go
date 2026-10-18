@@ -152,7 +152,7 @@ func glassProperties(theme Theme) []cssProperty {
 	glass := theme.Glass
 	return []cssProperty{
 		{"sunken", glass.Raised.Hex()},
-		{"glass-pane", glass.Pane.Hex()}, {"glass-raised", glass.Raised.Hex()},
+		{"glass-pane", glass.Pane.Hex()}, {"glass-raised", glass.Raised.Hex()}, {"glass-dialog", glass.Dialog.Hex()},
 		{"glass-glow-one", glass.Glows[0].Hex()}, {"glass-glow-two", glass.Glows[1].Hex()},
 		{"glass-veil", glass.Veil.Hex()}, {"glass-dimming", fmt.Sprintf("%g", glass.Dimming)},
 		{"glass-blur", pixels(glass.Blur)},
@@ -166,6 +166,7 @@ const solidGlassCSS = `
     --glass-pane: var(--surface);
     --glass-raised: var(--accent-tint);
     --sunken: var(--accent-tint);
+    --glass-dialog: var(--surface);
     --glass-blur: 0px;
   }
 }

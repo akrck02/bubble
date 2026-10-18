@@ -136,6 +136,7 @@ type Glass struct {
 	Enabled bool
 	Pane    Color    // the translucent fill of panels, cards and fields, with no outline
 	Raised  Color    // a brighter fill, for what is hovered or chosen
+	Dialog  Color    // the denser fill of a dialog, which floats over other text
 	Glows   [2]Color // the two soft lights behind the panels, drawn blurred on the ground
 	Veil    Color    // laid over a wallpaper, so any picture behind keeps the text readable
 	Dimming float64  // how bright a wallpaper is kept before the veil, from 0 to 1 (CSS brightness)

@@ -114,6 +114,32 @@ func TestTextOnGlassReadsOverTheGroundEachLightAndAnyWallpaper(test *testing.T) 
 	}
 }
 
+func TestTextOnAGlassDialogReadsOverAnyPageBehindIt(test *testing.T) {
+	for _, theme := range everyTheme(test) {
+		glass, colors := theme.Glass, theme.Colors
+		if !glass.Enabled {
+			continue
+		}
+		for _, behind := range []Color{black, white} {
+			page := colors.Scrim.Over(behind)
+			for _, fill := range []struct {
+				name  string
+				color Color
+			}{{"a dialog", glass.Dialog}, {"a raised field in a dialog", glass.Raised}} {
+				seen := fill.color.Over(glass.Dialog.Over(page))
+				if fill.name == "a dialog" {
+					seen = glass.Dialog.Over(page)
+				}
+				where := fill.name + " over " + behind.Hex()
+				expectContrast(test, theme, "ink on "+where, colors.Ink, seen, textContrast)
+				expectContrast(test, theme, "soft ink on "+where, colors.InkSoft, seen, textContrast)
+				expectContrast(test, theme, "quiet ink on "+where, colors.InkQuiet, seen, textContrast)
+				expectContrast(test, theme, "the focus ring on "+where, colors.FocusRing, seen, controlContrast)
+			}
+		}
+	}
+}
+
 func TestOnGlassWhatIsChosenIsBrighterNotColoured(test *testing.T) {
 	for _, theme := range everyTheme(test) {
 		if theme.Glass.Enabled && theme.Colors.AccentTint != theme.Glass.Raised.Over(theme.Colors.Background) {
