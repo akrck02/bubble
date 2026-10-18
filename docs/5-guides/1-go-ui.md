@@ -86,7 +86,15 @@ window.Run(options, func(context *ui.Context) {
 })
 ```
 
-`goui.Theme` makes surfaces and wells the translucent panes, as Bubble's CSS does. The browser
-blurs what is behind a pane; go-ui does not yet, but glass's own ground is smooth, so blurring it
-would change nothing. Over a photograph, or over other text, it would: that is still to come in
-go-renderer.
+`goui.Theme` makes surfaces and wells the translucent panes, as Bubble's CSS does, and sets go-ui's
+`Backdrop` to glass's blur: every pane blurs what is behind it, as CSS's `backdrop-filter`. Over
+glass's own smooth ground it hardly shows; over a picture it does. To see it, draw the showcase
+over sharp stripes:
+
+```bash
+cd goui && go run ./cmd/showcase -glass -dark -stripes
+```
+
+Under each pane the stripes turn into a soft grey. go-renderer takes one snapshot of the frame per
+layer and blurs it small; its guide to the overlay measures what that costs. Over a 3D scene,
+Metal does not blur yet: the panes show unblurred there.

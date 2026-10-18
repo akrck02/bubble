@@ -14,6 +14,8 @@ import (
 	_ "embed"
 	"flag"
 	"fmt"
+	"image"
+	"image/color"
 	"os"
 
 	"github.com/akrck02/bubble"
@@ -55,6 +57,7 @@ func main() {
 	style := flag.String("style", "paper", "paper or material")
 	accent := flag.String("accent", "#81D4FA", "the project's accent, from its logo")
 	glass := flag.Bool("glass", false, "the glass finish (paper only, as in Bubble)")
+	stripes := flag.Bool("stripes", false, "on glass, a ground of sharp stripes, to see the blur behind the panes")
 	font := flag.String("font", "", "a TrueType file to write in, its bold beside it as NAME-Bold.ttf (to match a browser)")
 	flag.Parse()
 
@@ -66,6 +69,9 @@ func main() {
 	showcase, err := newScreen(*style, *accent, *glass, options)
 	if err != nil {
 		fail(err)
+	}
+	if *stripes && showcase.ground != nil {
+		showcase.ground = draw2d.NewImage(stripedGround(options.Width, options.Height))
 	}
 	if err := window.Run(options, showcase.draw); err != nil {
 		fail(err)
@@ -329,4 +335,23 @@ func (showcase *screen) proofs(context *ui.Context) {
 			}
 		})
 	})
+}
+
+// stripeWidth is how wide each stripe of the test ground is, in pixels.
+const stripeWidth = 24
+
+// stripedGround is a ground of sharp light and dark stripes: under a frosted pane they turn into a
+// soft grey, which shows the blur at work, where glass's own smooth ground would hide it.
+func stripedGround(width, height int) *image.RGBA {
+	picture := image.NewRGBA(image.Rect(0, 0, width, height))
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			shade := uint8(40)
+			if (x/stripeWidth+y/stripeWidth)%2 == 0 {
+				shade = 200
+			}
+			picture.SetRGBA(x, y, color.RGBA{shade, shade, shade, 255})
+		}
+	}
+	return picture
 }

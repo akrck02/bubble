@@ -78,4 +78,10 @@ func TestOnGlassPanelsAndWellsAreTheTranslucentPanes(t *testing.T) {
 	if result.Surface[3] >= 1 || result.Sunken[3] >= 1 {
 		t.Fatal("nothing on glass is opaque")
 	}
+	if result.Backdrop != float32(theme.Glass.Blur) {
+		t.Fatal("glass blurs what is behind its panes by Bubble's blur")
+	}
+	if Theme(themeFor(t, bubble.StylePaper, bubble.ModeDark, false)).Backdrop != 0 {
+		t.Fatal("paper without glass blurs nothing")
+	}
 }
