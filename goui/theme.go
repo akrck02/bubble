@@ -84,7 +84,7 @@ func glassy(result *ui.Theme, theme bubble.Theme) {
 	result.Sunken = colour(glass.Raised)
 	result.Chosen = result.Sunken
 	result.ControlLine = colour(theme.Colors.Ink.WithAlpha(glassFieldEdge))
-	result.Backdrop = float32(glass.Blur) // frosted, as CSS's backdrop-filter: blur()
+	result.BackdropBlur = float32(glass.Blur) // frosted, as CSS's backdrop-filter: blur()
 }
 
 func colour(value bubble.Color) draw2d.Color { return draw2d.Hex(value.Hex()) }

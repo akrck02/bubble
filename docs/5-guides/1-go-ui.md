@@ -8,8 +8,8 @@ in a go-ui window.
 `goui` is a module of its own (`goui/go.mod`): Bubble's package stays free of go-ui, so making CSS
 needs nothing of it, and go-ui knows nothing of Bubble.
 
-> **Status:** in development, like Bubble 4 itself. go-ui and go-renderer are not published yet:
-> `goui` builds against copies cloned next to Bubble.
+> **Status:** in development, like Bubble 4 itself. `goui` needs go-ui and go-renderer v0.1.0
+> (their `main`) cloned next to Bubble, since go-ui still reaches go-renderer through a local copy.
 
 ## The shortest way
 
@@ -94,7 +94,7 @@ window.Run(options, func(context *ui.Context) {
 ```
 
 `goui.Theme` makes surfaces and wells the translucent panes, as Bubble's CSS does, and sets go-ui's
-`Backdrop` to glass's blur: every pane blurs what is behind it, as CSS's `backdrop-filter`. Over
+`BackdropBlur` to glass's blur: every pane blurs what is behind it, as CSS's `backdrop-filter`. Over
 glass's own smooth ground it hardly shows; over a picture it does. To see it, draw the showcase
 over sharp stripes:
 

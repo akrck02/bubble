@@ -16,8 +16,8 @@ require (
 	golang.org/x/text v0.41.0 // indirect
 )
 
-// Bubble is the module one folder up. go-ui and go-renderer are not published yet: build against
-// copies cloned next to Bubble.
+// Bubble is the module one folder up. go-ui v0.1.0 still points at go-renderer through a local
+// replace, so build against both cloned next to Bubble, on main (v0.1.0).
 replace (
 	github.com/akrck02/bubble => ../
 	github.com/akrck02/go-renderer => ../../go-renderer
