@@ -1,0 +1,29 @@
+# Publishes docs/ as a website on GitHub Pages with papiro (https://github.com/akrck02/papiro-deploy).
+name: Publish documents
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: akrck02/papiro-deploy@main
+        with:
+          title: "Bubble"
+          description: "The same look for web pages and Go UI"
+          logo: "./docs/images/logo.svg"
+          accent: "#2C5C9E"
+          path: "./docs"
+          isObsidianProject: false
+          showFooter: true
+          showBreadcrumb: true
+          showStartPage: true
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.3.0
+        with:
+          branch: gh-pages
+          folder: .
