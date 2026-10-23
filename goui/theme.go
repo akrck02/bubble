@@ -28,6 +28,9 @@ const (
 	checkMark         = 14   // its tick
 	glassFieldEdge    = 0.16 // a glass field's soft edge: this much ink over nothing
 	pressScale        = 0.97 // a held button, as .button:active scales it
+	// materialPanelRadius is the corner of go-ui's own panels in the material style, as Go UI for
+	// Android drew them; Material's dialogs and sheets keep their 28.
+	materialPanelRadius = 16
 )
 
 // Theme turns a Bubble theme into go-ui's. The colours carry the same names, mostly; the sizes come
@@ -73,7 +76,31 @@ func Theme(theme bubble.Theme) ui.Theme {
 	if theme.Glass.Enabled {
 		glassy(&result, theme)
 	}
+	if theme.Options.Style == bubble.StyleMaterial {
+		materialy(&result, theme)
+	}
 	return result
+}
+
+// materialy gives go-ui's own controls Material's look, as Go UI for Android's theme did: the
+// highest container sinks, the selection is the accent's container, and the controls keep go-ui's
+// own buttons, chosen rows and check boxes, which Material's parts replace where it matters.
+func materialy(result *ui.Theme, theme bubble.Theme) {
+	colours, base := theme.Colors, ui.LightTheme()
+	if theme.Options.Mode == bubble.ModeDark {
+		base = ui.DarkTheme()
+	}
+	result.Sunken, result.Selection = colour(colours.ContainerHighest), colour(colours.AccentContainer)
+	result.InkQuiet = colour(colours.ControlLine)
+	result.LineHeight, result.HeadingLineHeight = base.LineHeight, base.HeadingLineHeight
+	result.ButtonPadding, result.ButtonGap, result.ButtonWeight = base.ButtonPadding, base.ButtonGap, base.ButtonWeight // pills, as Bubble shapes them
+	result.PrimaryEdge, result.EdgeWidth = base.PrimaryEdge, base.EdgeWidth
+	result.FlatHeight, result.FlatPadding, result.FlatInk = base.FlatHeight, base.FlatPadding, base.FlatInk
+	result.Chosen, result.ChosenInk, result.ChosenWeight = base.Chosen, base.ChosenInk, base.ChosenWeight
+	result.ItemPadding, result.ItemGap, result.ItemIconInk = base.ItemPadding, base.ItemGap, base.ItemIconInk
+	result.CheckSize, result.CheckRadius, result.CheckBorder, result.CheckMark = base.CheckSize, base.CheckRadius, base.CheckBorder, base.CheckMark
+	result.CheckLine, result.CheckedBorder = base.CheckLine, base.CheckedBorder
+	result.PanelRadius = materialPanelRadius
 }
 
 // glassy makes the panels crystal: nothing on glass is opaque, and what Bubble sinks takes the

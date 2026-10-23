@@ -176,8 +176,8 @@ func NewTheme(options Options) (Theme, error) {
 		Options: options,
 		Colors:  colorsOf(base, options),
 		Shape:   shapeOf(options.Style, options.Density),
-		Type:    typeOf(options.Density),
-		Space:   spaceOf(options.Density),
+		Type:    typeOf(options.Style, options.Density),
+		Space:   spaceOf(options.Style, options.Density),
 		Motion:  Motion{Fast: 250 * time.Millisecond, Medium: 500 * time.Millisecond, Slow: 750 * time.Millisecond},
 	}
 	if glass.Enabled {

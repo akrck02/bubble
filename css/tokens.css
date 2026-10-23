@@ -182,9 +182,9 @@
   --on-inverse: #EAF1FC;
   --inverse-accent: #A3C9FF;
   --color-scheme: light;
-  --control-radius: 12px;
+  --control-radius: 20px;
   --button-radius: 999px;
-  --card-radius: 20px;
+  --card-radius: 12px;
   --panel-radius: 28px;
   --floating-radius: 16px;
   --line-width: 1px;
@@ -301,9 +301,9 @@
 }
 
 :root[data-style="material"][data-density="compact"] {
-  --control-radius: 7.2px;
+  --control-radius: 12px;
   --button-radius: 999px;
-  --card-radius: 12px;
+  --card-radius: 7.2px;
   --panel-radius: 16.8px;
   --floating-radius: 16px;
   --line-width: 1px;

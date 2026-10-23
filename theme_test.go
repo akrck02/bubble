@@ -3,6 +3,7 @@ package bubble
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -258,5 +259,18 @@ func TestTheFocusRingStandsOutFromTheSurfacesItTouches(test *testing.T) {
 		colors := theme.Colors
 		expectContrast(test, theme, "focus ring on a surface", colors.FocusRing, colors.Surface, controlContrast)
 		expectContrast(test, theme, "focus ring on a sunken fill", colors.FocusRing, colors.Sunken, controlContrast)
+	}
+}
+
+func TestMaterialHasMaterialsSizesAndRoboto(test *testing.T) {
+	theme, err := NewTheme(Options{Style: StyleMaterial, Mode: ModeLight, Density: DensityComfortable, Accent: DefaultAccent})
+	if err != nil {
+		test.Fatal(err)
+	}
+	if theme.Space.ControlHeight != 48 || theme.Space.TouchTarget != 48 || theme.Type.BodySize != 16 || theme.Type.HeadingSize != 22 || theme.Type.IconSize != 24 {
+		test.Errorf("material sizes: %+v %+v", theme.Space, theme.Type)
+	}
+	if theme.Shape.CardRadius != 12 || theme.Shape.PanelRadius != 28 || !strings.HasPrefix(theme.Type.Family, "Roboto") {
+		test.Errorf("material shape or family: %+v %s", theme.Shape, theme.Type.Family)
 	}
 }

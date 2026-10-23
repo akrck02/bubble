@@ -81,8 +81,8 @@ browser.
 
 - [x] T1 — Seed maths and Material's scheme in the root package · `material.go`, `palettes.go` · R1 R6 · test: `TestMaterialRolesComeFromTheSeedAsGoUIForAndroidMadeThem`
 - [x] T2 — The ladder of surfaces in every style, with contrast tests · `theme.go`, `palettes.go`, `accent.go` · R2 · test: `TestInkReadsOnEveryStepOfTheLadder`
-- [ ] T3 — Material's shape and type, Roboto in `goui` · `scale.go`, `goui/fonts/` · R3 · test of sizes
-- [ ] T4 — `goui.Theme` maps the ladder and Material's sizes · `goui/theme.go` · R1 R3 · goui tests
+- [x] T3 — Material's shape and type, Roboto in `goui` · `scale.go`, `goui/fonts/` · R3 · test of sizes
+- [x] T4 — `goui.Theme` maps the ladder and Material's sizes · `goui/theme.go` · R1 R3 · goui tests
 - [ ] T5 — Move `material/` into `bubble/goui/material`, reading a Bubble theme; its tests pass · R4 · moved tests
 - [ ] T6 — The gallery in `bubble/goui/cmd/gallery`, and `compare.sh` against Go UI for Android's · R5 · captures and their difference
 - [ ] T7 — The CSS: the ladder and Material's roles in `tokens.css`, Material's parts in `bubble.css`, if the author wants it now · R7 · CSS tests, showcase pair

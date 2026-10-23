@@ -96,3 +96,36 @@ func TestABubbleThemeLightsFieldsAndShrinksWhenPressed(t *testing.T) {
 		t.Fatalf("a held control is drawn at 0.97, as Bubble's CSS presses it: %v", result.PressScale)
 	}
 }
+
+func TestTheMaterialStyleIsWrittenInRoboto(t *testing.T) {
+	fonts := FontsFor(bubble.StyleMaterial)
+	if len(fonts.Regular) == 0 || len(fonts.Medium) == 0 || len(fonts.Bold) == 0 {
+		t.Fatal("Roboto's three weights are embedded")
+	}
+	if paper := FontsFor(bubble.StylePaper); len(paper.Regular) != 0 {
+		t.Error("paper keeps go-renderer's own typeface")
+	}
+}
+
+func TestAMaterialThemeIsTheOneGoUIForAndroidGaveGoUI(t *testing.T) {
+	theme := themeFor(t, bubble.StyleMaterial, bubble.ModeLight, false)
+	result := Theme(theme)
+	colours := theme.Colors
+	for _, pair := range []struct {
+		name      string
+		got, want draw2d.Color
+	}{
+		{"background", result.Background, colour(colours.Background)},
+		{"surface", result.Surface, colour(colours.ContainerLow)},
+		{"sunken", result.Sunken, colour(colours.ContainerHighest)},
+		{"selection", result.Selection, colour(colours.AccentContainer)},
+		{"tint", result.PrimaryTint, colour(colours.AccentTint)},
+	} {
+		if pair.got != pair.want {
+			t.Errorf("%s is %v, want %v", pair.name, pair.got, pair.want)
+		}
+	}
+	if result.ControlHeight != 48 || result.TextSize != 16 || result.ControlRadius != 20 || result.PanelRadius != 16 || result.EdgeWidth != 0 {
+		t.Errorf("sizes: height %v, text %v, corners %v and %v, edge %v", result.ControlHeight, result.TextSize, result.ControlRadius, result.PanelRadius, result.EdgeWidth)
+	}
+}
