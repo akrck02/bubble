@@ -956,6 +956,14 @@ input[type="checkbox"]:disabled { opacity: 0.6; cursor: not-allowed; }
   box-shadow: none;
 }
 
+:root[data-style="material"] .list-item {
+  border-color: transparent;
+  background: var(--container-low);
+  color: var(--ink);
+}
+
+:root[data-style="material"] .list-item.done { background: transparent; }
+
 :root[data-style="material"] .button { font-weight: 500; }
 :root[data-style="material"] .button:not(.primary, .tonal, .ghost) { color: var(--accent-ink); }
 

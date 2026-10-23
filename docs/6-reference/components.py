@@ -13,10 +13,12 @@ PARTS = [
     ("buttons", "Buttons", "Actions. A screen has one primary button, its main action.", """
 <button class="button primary" type="button">Save</button>
 <button class="button" type="button">Cancel</button>
+<button class="button tonal" type="button">Sell one</button>
 <button class="button ghost" type="button">More</button>
 <button class="button danger" type="button">Remove</button>
 <button class="button ghost icon" type="button" aria-label="Add">""" + PLUS + """</button>
 """, ["`.primary` stands on its darker edge, and sinks onto it when pressed.",
+      "`.tonal` is for an action repeated in a list: a sunken fill in ink, the accent's tint in Material.",
       "`.ghost` has no border; `.icon` is square, a finger wide, and needs an `aria-label`.",
       "`.danger` is for actions that lose something. It is never filled."]),
     ("fields", "Fields", "A label over its control: inputs, text areas and selects.", """

@@ -2,10 +2,6 @@
 
 **Goal:** the herbarium in Material, the look Android users know, without touching its parts.
 
-> **Material is half done.** Today Bubble's material style changes shapes and tints, but it is
-> still close to paper. The look it is heading for is Go UI for Android's, shown at the end of
-> this level. The pictures here are of today's style, and will change.
-
 ## On the web
 
 Add one attribute:
@@ -22,9 +18,10 @@ What changed, and what did not:
 
 | Changed | The same |
 |---|---|
-| buttons and chips are pills | every class in the HTML |
-| cards are tinted with the accent and float | the green, adjusted the same way |
-| the index becomes a rail of icons | fields, lists and type, for now |
+| every colour is made from the green, as Android makes its own | every class in the HTML |
+| cards, panes and rows sit on tones of the page, with no lines | the green as the main action |
+| fields are filled, with a line under them | the order of the page |
+| buttons are pills with medium labels; the index is a rail of icons | the contrast Bubble checks |
 
 ## In Go
 
@@ -34,21 +31,16 @@ go run ./examples/herbarium -style material
 
 ![The herbarium in Material, in Go](../images/quest/8-material-go.jpg)
 
-In the program it is one field: `Style: bubble.StyleMaterial`. The herbarium's own panes read the
-style too: on Material they are tinted and float, as Bubble's CSS draws them.
+In the program it is one field: `Style: bubble.StyleMaterial`, and Roboto for the window
+(`goui.FontsFor`). The herbarium's own panes read the style too: on Material they sit on the low
+container, as Bubble's CSS draws them.
 
-## Where Material is going
+## Material's own parts
 
-This is the Material Bubble is heading for, from Go UI for Android's gallery: tonal surfaces
-tinted from the accent, no lines round panes, filled fields with a line under them, a pill behind
-the chosen place, and Roboto at Material's scale.
-
-![Go UI for Android's Material: buttons and fields](../images/material-target.jpg)
-
-Material is more than a look. Android apps also share their parts: a navigation bar at the
-bottom, snackbars, dialogs, carousels. Those parts, and the look above, are moving into Bubble from Go UI for Android,
-as controls that read Bubble's theme, so they will work in paper and glass too.
-[Material's components](../5-guides/5-material-components.md) follows that work.
+Android apps also share their parts: a navigation bar at the bottom, snackbars, dialogs,
+carousels. Bubble has them for Go UI in `goui/material`, the parts Go UI for Android wrote. They
+read Bubble's theme, so they work in paper and glass too. [Material's components](../5-guides/5-material-components.md)
+shows them, next to the gallery they came from.
 
 ## 🏁 The end of the quest
 

@@ -65,7 +65,7 @@ You do not need to know design. You need to know a little HTML, or a little Go.
 | Look | What it feels like | How to ask for it |
 |---|---|---|
 | **Paper** (the default) | a warm page by day, the slate of the logos by night | nothing |
-| **Material** (half done) | what Android users know: tinted cards, a rail of icons | `data-style="material"` |
+| **Material** | what Android users know: tones made from your accent, filled fields, Roboto | `data-style="material"` |
 | **Glass** | frosted panes over a soft light or a wallpaper | `data-glass` (paper only) |
 
 Each comes in light and dark, and in a comfortable or a compact density.
@@ -85,8 +85,8 @@ Each comes in light and dark, and in a comfortable or a compact density.
 **In development.** Bubble 4 is a new start: Bubble 3, a CSS framework of classes, is gone.
 The tokens, the CSS and the Go UI module work and are tested. Coming next:
 
-- Material's full look and its components for Go UI (navigation bars, dialogs, snackbars),
-  moving here from Go UI for Android, whose Material is the reference. See [Material's components](5-guides/5-material-components.md).
+- Material's components for Go UI came from Go UI for Android and live in `goui/material`; their
+  look is compared with that project's gallery. See [Material's components](5-guides/5-material-components.md).
 - A release with a version number. Until then, take the files from the `main` branch.
 
 ## 👪 The family

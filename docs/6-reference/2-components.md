@@ -9,6 +9,7 @@ Actions. A screen has one primary button, its main action.
 ```html
 <button class="button primary" type="button">Save</button>
 <button class="button" type="button">Cancel</button>
+<button class="button tonal" type="button">Sell one</button>
 <button class="button ghost" type="button">More</button>
 <button class="button danger" type="button">Remove</button>
 <button class="button ghost icon" type="button" aria-label="Add"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
@@ -17,6 +18,7 @@ Actions. A screen has one primary button, its main action.
 ![Buttons](../images/components/buttons.png)
 
 - `.primary` stands on its darker edge, and sinks onto it when pressed.
+- `.tonal` is for an action repeated in a list: a sunken fill in ink, the accent's tint in Material.
 - `.ghost` has no border; `.icon` is square, a finger wide, and needs an `aria-label`.
 - `.danger` is for actions that lose something. It is never filled.
 

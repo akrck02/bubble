@@ -55,6 +55,7 @@ func main() {
 	style := flag.String("style", "paper", "paper or material")
 	glass := flag.Bool("glass", false, "the glass finish (paper only)")
 	flag.Parse()
+	options.Fonts = goui.FontsFor(bubble.Style(*style)) // Roboto for Material, as Android writes
 
 	garden, err := newHerbarium(bubble.Style(*style), *glass, options)
 	if err != nil {
@@ -186,9 +187,6 @@ func (garden *herbarium) pane(context *ui.Context, layout ui.Layout, content fun
 	context.Frame(layout, garden.surface(theme.PanelRadius), content)
 }
 
-// materialTint is how much accent tint Bubble's CSS mixes into a Material card.
-const materialTint = 0.45
-
 // surface is how Bubble's CSS draws a card or a pane in the theme's style, with the given corners.
 func (garden *herbarium) surface(radius float32) ui.Look {
 	theme, colours := garden.theme, garden.design.Colors
@@ -196,8 +194,8 @@ func (garden *herbarium) surface(radius float32) ui.Look {
 	case garden.ground != nil:
 		return ui.Look{Fill: theme.Surface, Radius: radius}
 	case garden.design.Options.Style == bubble.StyleMaterial:
-		tinted := colours.Surface.Mix(colours.AccentTint, materialTint)
-		return ui.Look{Fill: draw2d.MustHex(tinted.Hex()), Radius: radius, Shadow: true}
+		// Material tells surfaces apart by tone: the low container, with no line
+		return ui.Look{Fill: draw2d.MustHex(colours.ContainerLow.Hex()), Radius: radius}
 	default:
 		return ui.Look{Fill: theme.Surface, Border: theme.Line, BorderWidth: 1, Radius: radius}
 	}

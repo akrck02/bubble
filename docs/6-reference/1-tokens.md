@@ -8,36 +8,49 @@ This page is made by `docs/6-reference/generate.py` from the code; do not edit i
 
 | Token | Go | Paper | Paper, dark | Material | Material, dark | What it is |
 |---|---|---|---|---|---|---|
-| `--background` | `Colors.Background` | `#F7F5F0` | `#1A1D24` | `#F4F4F6` | `#121316` | the page or window |
-| `--surface` | `Colors.Surface` | `#FDFCF9` | `#22262E` | `#FFFFFF` | `#1E1F24` | fields, raised cards, menus |
-| `--ink` | `Colors.Ink` | `#1F2329` | `#E9E7E1` | `#1B1B1F` | `#E4E2E6` | body text |
-| `--ink-soft` | `Colors.InkSoft` | `#555A62` | `#B0B3BB` | `#45474F` | `#C5C6D0` | secondary text and icons |
-| `--ink-quiet` | `Colors.InkQuiet` | `#62666E` | `#8F939C` | `#5E616A` | `#9A9BA5` | hints and captions |
-| `--line` | `Colors.Line` | `#DDD8CE` | `#2F3540` | `#D5D6DD` | `#34363C` | separators and the borders of cards |
-| `--control-line` | `Colors.ControlLine` | `#8C8578` | `#6E7480` | `#74777F` | `#8E9099` | borders of fields and secondary buttons: strong enough to see the control |
-| `--accent` | `Colors.Accent` | `#2C5C9E` | `#5B80B3` | `#2C5C9E` | `#5B80B3` | the main action's fill |
-| `--on-accent` | `Colors.OnAccent` | `#FFFFFF` | `#0E1116` | `#FFFFFF` | `#0E1116` | text and icons on the accent |
-| `--accent-edge` | `Colors.AccentEdge` | `#1F406F` | `#405A7D` | `#1F406F` | `#405A7D` | the block edge under a primary button: the logo's darker side, ×0.70 |
-| `--accent-side` | `Colors.AccentSide` | `#254E86` | `#4D6D98` | `#254E86` | `#4D6D98` | the logo's lighter side, ×0.85, for pressed states |
-| `--accent-ink` | `Colors.AccentInk` | `#2C5C9E` | `#7F9CC4` | `#2C5C9E` | `#7796C0` | accent-coloured text and icons on the background |
-| `--accent-tint` | `Colors.AccentTint` | `#D2D9E1` | `#20334F` | `#CAD6E7` | `#1B2D46` | a wash of the accent: the selected item, a checkpoint, a Material container |
+| `--background` | `Colors.Background` | `#F7F5F0` | `#1A1D24` | `#F6F9FE` | `#0E1115` | the page or window |
+| `--surface` | `Colors.Surface` | `#FDFCF9` | `#22262E` | `#EEF4FD` | `#171C23` | fields, raised cards, menus |
+| `--ink` | `Colors.Ink` | `#1F2329` | `#E9E7E1` | `#171C23` | `#DCE3ED` | body text |
+| `--ink-soft` | `Colors.InkSoft` | `#555A62` | `#B0B3BB` | `#3E4755` | `#BCC7D8` | secondary text and icons |
+| `--ink-quiet` | `Colors.InkQuiet` | `#62666E` | `#8F939C` | `#3E4755` | `#BCC7D8` | hints and captions |
+| `--line` | `Colors.Line` | `#DDD8CE` | `#2F3540` | `#BCC7D8` | `#3E4755` | separators and the borders of cards |
+| `--control-line` | `Colors.ControlLine` | `#8C8578` | `#6E7480` | `#6D7887` | `#8792A1` | borders of fields and secondary buttons: strong enough to see the control |
+| `--accent` | `Colors.Accent` | `#2C5C9E` | `#5B80B3` | `#305F9F` | `#A3C9FF` | the main action's fill |
+| `--on-accent` | `Colors.OnAccent` | `#FFFFFF` | `#0E1116` | `#FFFFFF` | `#002E68` | text and icons on the accent |
+| `--accent-edge` | `Colors.AccentEdge` | `#1F406F` | `#405A7D` | `#305F9F` | `#A3C9FF` | the block edge under a primary button: the logo's darker side, ×0.70 |
+| `--accent-side` | `Colors.AccentSide` | `#254E86` | `#4D6D98` | `#4972AB` | `#8FB6ED` | the logo's lighter side, ×0.85, for pressed states |
+| `--accent-ink` | `Colors.AccentInk` | `#2C5C9E` | `#7F9CC4` | `#305F9F` | `#A3C9FF` | accent-coloured text and icons on the background |
+| `--accent-tint` | `Colors.AccentTint` | `#D2D9E1` | `#20334F` | `#D1E4FF` | `#354862` | a wash of the accent: the selected item, a checkpoint, a Material container |
 | `--positive` | `Colors.Positive` | `#1E7D4F` | `#4CC38A` | `#1E7D4F` | `#4CC38A` | success: saved, done, valid |
 | `--warning` | `Colors.Warning` | `#8A5300` | `#E5A64A` | `#8A5300` | `#E5A64A` | something to look at, not yet wrong |
-| `--danger` | `Colors.Danger` | `#B3261E` | `#EF7A6C` | `#B3261E` | `#EF7A6C` | errors and actions that lose something |
-| `--focus-ring` | `Colors.FocusRing` | `#2C5C9E` | `#7F9CC4` | `#2C5C9E` | `#7796C0` | the ring around whatever the keyboard is on |
-| `--selection` | `Colors.Selection` | `#2C5C9E4D` | `#5B80B34D` | `#2C5C9E4D` | `#5B80B34D` | behind selected text |
+| `--danger` | `Colors.Danger` | `#B3261E` | `#EF7A6C` | `#B3261E` | `#F2B8B5` | errors and actions that lose something |
+| `--focus-ring` | `Colors.FocusRing` | `#2C5C9E` | `#7F9CC4` | `#305F9F` | `#A3C9FF` | the ring around whatever the keyboard is on |
+| `--selection` | `Colors.Selection` | `#2C5C9E4D` | `#5B80B34D` | `#305F9F4D` | `#A3C9FF4D` | behind selected text |
 | `--shadow` | `Colors.Shadow` | `#1F232929` | `#00000066` | `#1F232929` | `#00000066` | the colour of shadows |
-| `--scrim` | `Colors.Scrim` | `#1F232966` | `#0000008C` | `#1F232966` | `#0000008C` | over everything behind a sheet or a dialog |
+| `--scrim` | `Colors.Scrim` | `#1F232966` | `#0000008C` | `#00000052` | `#00000052` | over everything behind a sheet or a dialog |
 | `--tile` | `Colors.Tile` | `#2F3540` | `#2F3540` | `#2F3540` | `#2F3540` | the dark tile every voxel logo stands on |
+| `--container-low` | `Colors.ContainerLow` | `#FDFCF9` | `#22262E` | `#EEF4FD` | `#171C23` |  |
+| `--container` | `Colors.Container` | `#F8F6F1` | `#1E2129` | `#E7EEF9` | `#1B2027` |  |
+| `--container-high` | `Colors.ContainerHigh` | `#F4F0E8` | `#191D23` | `#E2E9F3` | `#252B32` |  |
+| `--container-highest` | `Colors.ContainerHighest` | `#EFEAE0` | `#15181E` | `#DCE3ED` | `#2F353D` |  |
+| `--on-accent-tint` | `Colors.OnAccentTint` | `#1F2329` | `#E9E7E1` | `#0B1C33` | `#D1E4FF` | text and icons on the accent tint |
+| `--accent-container` | `Colors.AccentContainer` | `#D2D9E1` | `#20334F` | `#D1E4FF` | `#184684` | a stronger wash of the accent: a chosen chip, a floating button |
+| `--on-accent-container` | `Colors.OnAccentContainer` | `#1F2329` | `#E9E7E1` | `#001A41` | `#D1E4FF` |  |
+| `--on-danger` | `Colors.OnDanger` | `#FFFFFF` | `#0E1116` | `#FFFFFF` | `#601410` | text on a danger fill |
+| `--danger-container` | `Colors.DangerContainer` | `#EDD6D1` | `#3A2B2F` | `#F9DEDC` | `#8C1D18` | a wash of danger: an error banner |
+| `--on-danger-container` | `Colors.OnDangerContainer` | `#1F2329` | `#E9E7E1` | `#410E0B` | `#F9DEDC` |  |
+| `--inverse` | `Colors.Inverse` | `#1F2329` | `#E9E7E1` | `#2B3139` | `#DCE3ED` | what stands out against the page: a snackbar |
+| `--on-inverse` | `Colors.OnInverse` | `#F7F5F0` | `#1A1D24` | `#EAF1FC` | `#2B3139` |  |
+| `--inverse-accent` | `Colors.InverseAccent` | `#8BA5CA` | `#324662` | `#A3C9FF` | `#305F9F` | the accent on the inverse surface: a snackbar's action |
 | `--color-scheme` |  | `light` | `dark` | `light` | `dark` | light or dark, for the browser's own controls and scroll bars |
 
 ## Shape
 
 | Token | Go | Paper | Compact | Material | What it is |
 |---|---|---|---|---|---|
-| `--control-radius` | `Shape.ControlRadius` | `10px` | `6px` | `12px` | fields and selects |
+| `--control-radius` | `Shape.ControlRadius` | `10px` | `6px` | `20px` | fields and selects |
 | `--button-radius` | `Shape.ButtonRadius` | `10px` | `6px` | `999px` | buttons and chips |
-| `--card-radius` | `Shape.CardRadius` | `12px` | `7.199999999999999px` | `20px` | cards and panes |
+| `--card-radius` | `Shape.CardRadius` | `12px` | `7.2px` | `12px` | cards and panes |
 | `--panel-radius` | `Shape.PanelRadius` | `16px` | `9.6px` | `28px` | windows, sheets, dialogs |
 | `--floating-radius` | `Shape.FloatingRadius` | `999px` | `999px` | `16px` | the floating action button |
 | `--line-width` | `Shape.LineWidth` | `1px` | `1px` | `1px` | lines and borders |
@@ -50,24 +63,24 @@ This page is made by `docs/6-reference/generate.py` from the code; do not edit i
 
 | Token | Go | Paper | Compact | Material | What it is |
 |---|---|---|---|---|---|
-| `--font` | `Type.Family` | `system-ui, -apple-system, "Segoe UI", sans-serif` | `system-ui, -apple-system, "Segoe UI", sans-serif` | `same` | the system's own interface typeface |
-| `--font-monospace` | `Type.MonospaceFamily` | `ui-monospace, "SF Mono", Menlo, Consolas, monospace` | `ui-monospace, "SF Mono", Menlo, Consolas, monospace` | `same` | code and keys |
-| `--text-small` | `Type.SmallSize` | `13px` | `11px` | `same` | captions, hints, pills |
-| `--text-body` | `Type.BodySize` | `16px` | `13px` | `same` | body text |
-| `--text-heading` | `Type.HeadingSize` | `20px` | `15px` | `same` | section headings |
-| `--text-title` | `Type.TitleSize` | `30px` | `20px` | `same` | a page's title |
-| `--text-display` | `Type.DisplaySize` | `44px` | `28px` | `same` | a big number or a welcome |
-| `--icon-size` | `Type.IconSize` | `20px` | `16px` | `same` | icons beside text |
-| `--line-height` | `Type.LineHeight` | `1.5` | `1.4` | `same` | a multiple of the size |
+| `--font` | `Type.Family` | `system-ui, -apple-system, "Segoe UI", sans-serif` | `system-ui, -apple-system, "Segoe UI", sans-serif` | `Roboto, system-ui, -apple-system, "Segoe UI", sans-serif` | the system's own interface typeface |
+| `--font-monospace` | `Type.MonospaceFamily` | `ui-monospace, "SF Mono", Menlo, Consolas, monospace` | `ui-monospace, "SF Mono", Menlo, Consolas, monospace` | `ui-monospace, "SF Mono", Menlo, Consolas, monospace` | code and keys |
+| `--text-small` | `Type.SmallSize` | `13px` | `11px` | `14px` | captions, hints, pills |
+| `--text-body` | `Type.BodySize` | `16px` | `13px` | `16px` | body text |
+| `--text-heading` | `Type.HeadingSize` | `20px` | `15px` | `22px` | section headings |
+| `--text-title` | `Type.TitleSize` | `30px` | `20px` | `32px` | a page's title |
+| `--text-display` | `Type.DisplaySize` | `44px` | `28px` | `45px` | a big number or a welcome |
+| `--icon-size` | `Type.IconSize` | `20px` | `16px` | `24px` | icons beside text |
+| `--line-height` | `Type.LineHeight` | `1.5` | `1.4` | `1.5` | a multiple of the size |
 
 ## Space
 
 | Token | Go | Paper | Compact | Material | What it is |
 |---|---|---|---|---|---|
-| `--gap` | `Space.Gap` | `12px` | `8px` | `same` | between controls |
-| `--padding` | `Space.Padding` | `20px` | `12px` | `same` | inside cards and panels |
-| `--control-height` | `Space.ControlHeight` | `44px` | `28px` | `same` | buttons, fields and selects |
-| `--touch-target` | `Space.TouchTarget` | `44px` | `24px` | `same` | the smallest area a finger or pointer must be able to hit |
+| `--gap` | `Space.Gap` | `12px` | `8px` | `12px` | between controls |
+| `--padding` | `Space.Padding` | `20px` | `12px` | `16px` | inside cards and panels |
+| `--control-height` | `Space.ControlHeight` | `44px` | `28px` | `48px` | buttons, fields and selects |
+| `--touch-target` | `Space.TouchTarget` | `44px` | `24px` | `48px` | the smallest area a finger or pointer must be able to hit |
 
 ## Motion
 

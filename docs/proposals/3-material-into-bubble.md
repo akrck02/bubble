@@ -1,6 +1,6 @@
 # 3. Material into Bubble
 
-> Status: building · Author's approval: proposal ☑ plan ☑ (CSS included)
+> Status: built, waiting for review · Author's approval: proposal ☑ plan ☑ (CSS included)
 
 ## Why
 
@@ -86,8 +86,37 @@ browser.
 - [x] T5 — Move `material/` into `bubble/goui/material`, reading a Bubble theme; its tests pass · R4 · moved tests
 - [x] T6 — The gallery in `bubble/goui/cmd/gallery`, and `compare.sh` against Go UI for Android's · R5 · captures and their difference
 - [x] T7 — The CSS: the ladder and Material's roles in `tokens.css`, Material's parts in `bubble.css`, if the author wants it now · R7 · CSS tests, showcase pair
-- [ ] T8 — Docs: `5-guides/5-material-components.md` with the real API, the tokens reference, the journey · all
+- [x] T8 — Docs: `5-guides/5-material-components.md` with the real API, the tokens reference, the journey · all
 
 ## Result
 
-Not built yet.
+Built on `feature/v4`. `go vet` and `go test ./...` pass in both modules, with no display. The
+captures below were taken with xvfb.
+
+- **Colours (R1):** Material's colours come from the accent as a seed. A fixture of Go UI for
+  Android's output (`testdata/material-schemes.json`, 9 seeds, light and dark) checks them, within
+  2 per channel.
+- **Ladder (R2):** every style has the ladder and the paired colours, and contrast tests cover every
+  step.
+- **Sizes and type (R3):** Material's sizes are in place, and Roboto travels in `goui`
+  (`goui.FontsFor`).
+- **Parts (R4):** they are in `goui/material` and read `material.Roles`, Material's names for a
+  Bubble theme. Their tests moved with them, and one draws them in paper, glass and Material.
+- **Gallery (R5):** `goui/cmd/gallery` against Go UI for Android's, by `compare.sh`. The screens
+  differ by 2 to 4 %, except two:
+  - Actions by up to 13 %: the background is computed from Material's purple, where the original's
+    baseline was written by hand.
+  - Tabs by 18 %: the film card is gone.
+- **No Android (R6):** Bubble reads no Android package; palettes come in as `bubble.Palettes`.
+- **CSS (R7):** the CSS carries Material's ladder, type and space, its filled fields, tone-told
+  surfaces and flat main button, and a `.tonal` button in every style. The showcase pair in
+  Material differs by 12 % (light) and 15 % (dark), as paper does (10 %). The rest is Go UI's own
+  text field, which is outlined where the web's is filled.
+
+Not done, for a person to look at:
+
+- Real phones, and a real wallpaper's palettes.
+- Material's components in the CSS beyond fields, cards, buttons and chips: no navigation bar or
+  snackbar in CSS yet.
+- The herbarium page's settings overflow Material's narrow rail on the web; this was already so.
+- Go for Android's side: deleting what moved and the rename, for that project's session.

@@ -123,10 +123,15 @@ go = ["# 🐹 Go", "",
       "| read a colour | `bubble.ParseColor(\"#4C9A5B\")` |",
       "| write the CSS tokens | `bubble.CSS(writer, accent)`, or the `bubble-css` command |",
       "| check two colours | `bubble.Contrast(a, b)` |",
-      "| dress Go UI | `goui.Theme(theme)`, and `goui.Ground` for glass |", "",
+      "| dress Go UI | `goui.Theme(theme)`, and `goui.Ground` for glass |",
+      "| write in Material's typeface | `goui.FontsFor(style)`, Roboto for Material |",
+      "| draw Material's parts | `material.New(context, theme)` in `goui/material` |",
+      "| colour Material from a phone's wallpaper | `Options.Palettes`, or `bubble.PalettesFromColor(seed)` |", "",
       "## Package bubble", "", "`github.com/akrck02/bubble`", "", "```", godoc(".", "."), "```", "",
       "## Package goui", "", "`github.com/akrck02/bubble/goui`, a module of its own (`goui/go.mod`).", "",
       "```", godoc("goui", "."), "```", "",
+      "## Package goui/material", "", "`github.com/akrck02/bubble/goui/material`: Material 3's parts for Go UI.", "",
+      "```", godoc("goui", "./material"), "```", "",
       "## Command bubble-css", "", "```", godoc(".", "./cmd/bubble-css"), "```", ""]
 open("docs/6-reference/3-go.md", "w").write("\n".join(go))
 print("docs/6-reference/3-go.md")
