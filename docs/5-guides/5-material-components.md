@@ -56,25 +56,50 @@ Package `bubble/goui/material` has Material 3's parts for Go UI:
 - date and time pickers, progress indicators, pull to refresh and carousels.
 
 ```go
+package main
+
 import (
+	"fmt"
+	"log"
+
 	"github.com/akrck02/bubble"
 	"github.com/akrck02/bubble/goui"
 	"github.com/akrck02/bubble/goui/material"
+	"github.com/akrck02/go-renderer/draw2d"
+	ui "github.com/akrck02/go-ui"
+	"github.com/akrck02/go-ui/window"
 )
 
-theme, _ := bubble.NewTheme(bubble.Options{Style: bubble.StyleMaterial, Mode: bubble.ModeLight,
-	Density: bubble.DensityComfortable, Accent: accent})
-options.Fonts = goui.FontsFor(theme.Options.Style) // Roboto, for the window to draw in
-
-window.Run(options, func(context *ui.Context) {
-	context.Theme = goui.Theme(theme)
-	look := material.New(context, theme)
-	look.TopAppBar(material.TopBar{Title: "Lighthouses"})
-	if look.FilledButton("plus", "New light") {
-		// …
+func main() {
+	accent, err := bubble.ParseColor("#2C5C9E")
+	if err != nil {
+		log.Fatal(err)
 	}
-})
+	theme, err := bubble.NewTheme(bubble.Options{Style: bubble.StyleMaterial, Mode: bubble.ModeLight,
+		Density: bubble.DensityComfortable, Accent: accent})
+	if err != nil {
+		log.Fatal(err)
+	}
+	options := window.Options{Title: "Lighthouses", Width: 412, Height: 892}
+	options.Fonts = goui.FontsFor(theme.Options.Style) // Roboto, for the window to draw in
+	lights := 0
+	err = window.Run(options, func(context *ui.Context) {
+		context.Theme = goui.Theme(theme)
+		look := material.New(context, theme)
+		look.TopAppBar(material.TopBar{Title: "Lighthouses"})
+		if look.FilledButton("plus", "New light") {
+			lights++
+		}
+		look.Text(fmt.Sprintf("%d lights", lights), 16, draw2d.Regular, look.Roles.OnSurface)
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 ```
+
+It opens a phone-sized window in Material with a top bar, a filled button and a count of the
+lights it added. It is `goui/examples/lighthouses`: `cd goui && go run ./examples/lighthouses`.
 
 The parts read the theme through `material.Roles`, Material's names for Bubble's colours. So the
 same parts draw in paper and glass too: give `material.New` a paper theme and they follow it.

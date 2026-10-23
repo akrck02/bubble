@@ -35,7 +35,7 @@ func newInputs() inputsState {
 
 // draw shows the fields, the choices and the pickers.
 func (inputs *inputsState) draw(program *gallery, look material.Look) {
-	context, scheme := look.Context, look.Roles
+	context, roles := look.Context, look.Roles
 	program.largeTopBar(look, "Inputs", "Fields, choices and pickers", "inputs")
 	page(context, "inputs", func() {
 		inputs.searchLighthouses(program, look)
@@ -85,11 +85,11 @@ func (inputs *inputsState) draw(program *gallery, look material.Look) {
 			}
 		})
 		look.Context.Box(uiRow(12), func() {
-			context.IconSized("volume-2", 24, scheme.OnSurfaceVariant)
+			context.IconSized("volume-2", 24, roles.OnSurfaceVariant)
 			look.Slider("volume", &inputs.volume, 0, 1, 0)
 		})
 		look.Heading("Pickers")
-		look.Text("Last inspection", 14, draw2d.Medium, scheme.OnSurfaceVariant)
+		look.Text("Last inspection", 14, draw2d.Medium, roles.OnSurfaceVariant)
 		row(context, func() {
 			if look.OutlinedButton("calendar", inputs.date.Format("2 Jan 2006")) {
 				inputs.choosingDate = true
@@ -110,21 +110,21 @@ func (inputs *inputsState) draw(program *gallery, look material.Look) {
 // colourChoice chooses where the theme's colours come from: the wallpaper, or one accent that
 // Bubble makes into every colour.
 func (program *gallery) colourChoice(look material.Look) {
-	context, scheme := look.Context, look.Roles
+	context, roles := look.Context, look.Roles
 	context.Box(ui.Layout{Width: ui.Grow(), Padding: ui.PadXY(16, 4), Gap: 8, AlignY: ui.Center}, func() {
-		context.Box(ui.Layout{Width: ui.Grow()}, func() { look.Text("Colours", 16, draw2d.Regular, scheme.OnSurface) })
+		context.Box(ui.Layout{Width: ui.Grow()}, func() { look.Text("Colours", 16, draw2d.Regular, roles.OnSurface) })
 		for index := range len(seeds) + 1 {
 			chosen := program.colour == index
-			fill, icon := scheme.SurfaceContainerHighest, "image" // the wallpaper's
+			fill, icon := roles.SurfaceContainerHighest, "image" // the wallpaper's
 			if index > 0 {
 				fill, icon = draw2d.MustHex(seeds[index-1].Hex()), ""
 			}
 			if chosen {
 				icon = "check"
 			}
-			ring := ui.Look{Fill: fill, Radius: 20, Border: scheme.Outline, BorderWidth: 1}
+			ring := ui.Look{Fill: fill, Radius: 20, Border: roles.Outline, BorderWidth: 1}
 			if chosen {
-				ring.Border, ring.BorderWidth = scheme.Primary, 3
+				ring.Border, ring.BorderWidth = roles.Primary, 3
 			}
 			layout := ui.Layout{Width: ui.Fixed(40), Height: ui.Fixed(40), AlignX: ui.Center, AlignY: ui.Center}
 			if context.Clickable(fmt.Sprint("colour ", index), layout, ui.Looks{Normal: ring, Hovered: ring, Pressed: ring}, func() {

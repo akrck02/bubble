@@ -60,11 +60,21 @@ func closeColors(first, second Color) bool {
 }
 
 func TestAPhonesPalettesColourTheMaterialStyle(test *testing.T) {
-	palettes := PalettesFromColor(hex("#2E7D32"))
-	fromPalettes, _ := NewTheme(Options{Style: StyleMaterial, Mode: ModeLight, Density: DensityComfortable, Accent: hex("#C2185B"), Palettes: &palettes})
-	fromSeed, _ := NewTheme(Options{Style: StyleMaterial, Mode: ModeLight, Density: DensityComfortable, Accent: hex("#2E7D32")})
-	if fromPalettes.Colors.Accent != fromSeed.Colors.Accent {
-		test.Errorf("the phone's palettes give the accent %s, the seed %s", fromPalettes.Colors.Accent.Hex(), fromSeed.Colors.Accent.Hex())
+	for _, seed := range []string{"#2E7D32", "#1A73E8", "#FFEB3B", "#C2185B"} {
+		for _, mode := range []Mode{ModeLight, ModeDark} {
+			palettes := PalettesFromColor(hex(seed))
+			fromPalettes, err := NewTheme(Options{Style: StyleMaterial, Mode: mode, Density: DensityComfortable, Accent: hex("#808080"), Palettes: &palettes})
+			if err != nil {
+				test.Fatal(err)
+			}
+			fromSeed, err := NewTheme(Options{Style: StyleMaterial, Mode: mode, Density: DensityComfortable, Accent: hex(seed)})
+			if err != nil {
+				test.Fatal(err)
+			}
+			if fromPalettes.Colors != fromSeed.Colors {
+				test.Errorf("seed %s, %s: the palettes made from it colour the theme differently from the seed", seed, mode)
+			}
+		}
 	}
 }
 

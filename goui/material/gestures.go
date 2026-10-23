@@ -66,7 +66,7 @@ func (look Look) PullToRefresh(name string, refreshing bool, layout ui.Layout, c
 // leaves: pushed past two fifths of its width, or flicked, it goes, and SwipeToDismiss returns
 // true for the program to remove it; let go short of that, it slides back. name tells rows apart.
 func (look Look) SwipeToDismiss(name string, content func()) (dismissed bool) {
-	context, scheme := look.Context, look.Roles
+	context, roles := look.Context, look.Roles
 	context.SwipeBox(name, ui.Layout{Width: ui.Grow()}, ui.Horizontal, func(swipe ui.Swipe) {
 		width := swipe.Area.Width
 		if swipe.Released && width > 0 && (math.Abs(float64(swipe.Offset)) > float64(width)*0.4 || math.Abs(float64(swipe.Velocity)) > 1200) {
@@ -86,8 +86,8 @@ func (look Look) SwipeToDismiss(name string, content func()) (dismissed bool) {
 			if offset < 0 {
 				layout.AlignX = ui.End
 			}
-			context.Frame(layout, ui.Look{Fill: scheme.ErrorContainer}, func() {
-				context.IconSized("trash-2", 24, scheme.OnErrorContainer)
+			context.Frame(layout, ui.Look{Fill: roles.ErrorContainer}, func() {
+				context.IconSized("trash-2", 24, roles.OnErrorContainer)
 			})
 		}
 		row := ui.Layout{Width: ui.Grow()}
@@ -102,7 +102,7 @@ func (look Look) SwipeToDismiss(name string, content func()) (dismissed bool) {
 			if offset > 0 {
 				gap()
 			}
-			context.Frame(row, ui.Look{Fill: scheme.Surface}, content)
+			context.Frame(row, ui.Look{Fill: roles.Surface}, content)
 			if offset < 0 {
 				gap()
 			}

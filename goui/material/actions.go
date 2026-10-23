@@ -13,28 +13,28 @@ import (
 
 // FilledButton is the screen's main action, in the primary colour.
 func (look Look) FilledButton(icon, label string) bool {
-	scheme := look.Roles
-	return look.button(icon, label, ui.Look{Fill: scheme.Primary, Radius: 20}, scheme.PrimaryContainer, scheme.OnPrimary, 24)
+	roles := look.Roles
+	return look.button(icon, label, ui.Look{Fill: roles.Primary, Radius: 20}, roles.PrimaryContainer, roles.OnPrimary, 24)
 }
 
 // TonalButton is a main action that should not stand out as much, on the secondary container.
 func (look Look) TonalButton(icon, label string) bool {
-	scheme := look.Roles
-	normal := ui.Look{Fill: scheme.SecondaryContainer, Radius: 20}
-	return look.button(icon, label, normal, stateLayer(scheme.OnSecondaryContainer, 0.16), scheme.OnSecondaryContainer, 24)
+	roles := look.Roles
+	normal := ui.Look{Fill: roles.SecondaryContainer, Radius: 20}
+	return look.button(icon, label, normal, stateLayer(roles.OnSecondaryContainer, 0.16), roles.OnSecondaryContainer, 24)
 }
 
 // OutlinedButton is a second action beside the main one.
 func (look Look) OutlinedButton(icon, label string) bool {
-	scheme := look.Roles
-	normal := ui.Look{Border: scheme.Outline, BorderWidth: 1, Radius: 20}
-	return look.button(icon, label, normal, stateLayer(scheme.Primary, 0.12), scheme.Primary, 24)
+	roles := look.Roles
+	normal := ui.Look{Border: roles.Outline, BorderWidth: 1, Radius: 20}
+	return look.button(icon, label, normal, stateLayer(roles.Primary, 0.12), roles.Primary, 24)
 }
 
 // TextButton is the quietest action: a dialog's "Cancel", a card's "More".
 func (look Look) TextButton(icon, label string) bool {
-	scheme := look.Roles
-	return look.button(icon, label, ui.Look{Radius: 20}, stateLayer(scheme.Primary, 0.12), scheme.Primary, 12)
+	roles := look.Roles
+	return look.button(icon, label, ui.Look{Radius: 20}, stateLayer(roles.Primary, 0.12), roles.Primary, 12)
 }
 
 func (look Look) button(icon, label string, normal ui.Look, pressedFill, ink draw2d.Color, padding float32) bool {
@@ -58,25 +58,25 @@ func (look Look) IconButton(icon string) bool {
 // FloatingButton is the floating action button: 56 pixels, rounded square corners, raised over
 // what scrolls beneath it. Place it at the end of the screen, above the navigation bar.
 func (look Look) FloatingButton(icon string) bool {
-	scheme := look.Roles
-	normal := ui.Look{Fill: scheme.PrimaryContainer, Radius: 16, Shadow: true}
+	roles := look.Roles
+	normal := ui.Look{Fill: roles.PrimaryContainer, Radius: 16, Shadow: true}
 	layout := ui.Layout{Width: ui.Fixed(56), Height: ui.Fixed(56), AlignX: ui.Center, AlignY: ui.Center}
-	return look.Context.Clickable("floating "+icon, layout, pressedOnly(normal, scheme.SecondaryContainer), func() {
-		look.Context.IconSized(icon, 24, scheme.OnPrimaryContainer)
+	return look.Context.Clickable("floating "+icon, layout, pressedOnly(normal, roles.SecondaryContainer), func() {
+		look.Context.IconSized(icon, 24, roles.OnPrimaryContainer)
 	})
 }
 
 // RoundButton is a round floating button of any size, over a map or a scene (zoom in, zoom out,
 // change the view). primary fills it with the main colour; otherwise it is a raised surface.
 func (look Look) RoundButton(icon string, size float32, primary bool) bool {
-	scheme := look.Roles
-	normal := ui.Look{Fill: scheme.SurfaceContainerLow, Border: scheme.OutlineVariant, BorderWidth: 1, Radius: size / 2, Shadow: true}
-	ink := scheme.OnSurface
+	roles := look.Roles
+	normal := ui.Look{Fill: roles.SurfaceContainerLow, Border: roles.OutlineVariant, BorderWidth: 1, Radius: size / 2, Shadow: true}
+	ink := roles.OnSurface
 	if primary {
-		normal, ink = ui.Look{Fill: scheme.Primary, Radius: size / 2, Shadow: true}, scheme.OnPrimary
+		normal, ink = ui.Look{Fill: roles.Primary, Radius: size / 2, Shadow: true}, roles.OnPrimary
 	}
 	layout := ui.Layout{Width: ui.Fixed(size), Height: ui.Fixed(size), AlignX: ui.Center, AlignY: ui.Center}
-	return look.Context.Clickable("round "+icon, layout, pressedOnly(normal, scheme.SecondaryContainer), func() {
+	return look.Context.Clickable("round "+icon, layout, pressedOnly(normal, roles.SecondaryContainer), func() {
 		look.Context.IconSized(icon, size*0.45, ink)
 	})
 }
@@ -84,12 +84,12 @@ func (look Look) RoundButton(icon string, size float32, primary bool) bool {
 // ExtendedFloatingButton is the floating action button with its action written beside the icon:
 // clearer where the icon alone would not say it.
 func (look Look) ExtendedFloatingButton(icon, label string) bool {
-	scheme := look.Roles
-	normal := ui.Look{Fill: scheme.PrimaryContainer, Radius: 16, Shadow: true}
+	roles := look.Roles
+	normal := ui.Look{Fill: roles.PrimaryContainer, Radius: 16, Shadow: true}
 	layout := ui.Layout{Height: ui.Fixed(56), Padding: ui.Padding{Left: 16, Right: 20}, Gap: 12, AlignY: ui.Center}
-	return look.Context.Clickable("floating "+label, layout, pressedOnly(normal, scheme.SecondaryContainer), func() {
-		look.Context.IconSized(icon, 24, scheme.OnPrimaryContainer)
-		look.Text(label, 14, draw2d.Medium, scheme.OnPrimaryContainer)
+	return look.Context.Clickable("floating "+label, layout, pressedOnly(normal, roles.SecondaryContainer), func() {
+		look.Context.IconSized(icon, 24, roles.OnPrimaryContainer)
+		look.Text(label, 14, draw2d.Medium, roles.OnPrimaryContainer)
 	})
 }
 
@@ -112,7 +112,7 @@ type FloatingMenu struct {
 // while open. It returns the index of the action touched in this frame, or -1; touching one, the
 // cross or the system's back closes it.
 func (look Look) FloatingMenu(name string, menu *FloatingMenu) int {
-	scheme := look.Roles
+	roles := look.Roles
 	insets := look.Context.Insets()
 	if menu.Open && look.Context.Back() {
 		menu.Open = false
@@ -132,13 +132,13 @@ func (look Look) FloatingMenu(name string, menu *FloatingMenu) int {
 				}
 			}
 			// open, the button is a smaller round cross in the main colour
-			icon, size, normal := menu.Icon, float32(56), ui.Look{Fill: scheme.PrimaryContainer, Radius: 16, Shadow: true}
-			ink := scheme.OnPrimaryContainer
+			icon, size, normal := menu.Icon, float32(56), ui.Look{Fill: roles.PrimaryContainer, Radius: 16, Shadow: true}
+			ink := roles.OnPrimaryContainer
 			if menu.Open {
-				icon, size, normal, ink = "x", 56, ui.Look{Fill: scheme.Primary, Radius: 28, Shadow: true}, scheme.OnPrimary
+				icon, size, normal, ink = "x", 56, ui.Look{Fill: roles.Primary, Radius: 28, Shadow: true}, roles.OnPrimary
 			}
 			layout := ui.Layout{Width: ui.Fixed(size), Height: ui.Fixed(size), AlignX: ui.Center, AlignY: ui.Center}
-			if look.Context.Clickable("toggle", layout, pressedOnly(normal, scheme.SecondaryContainer), func() {
+			if look.Context.Clickable("toggle", layout, pressedOnly(normal, roles.SecondaryContainer), func() {
 				look.Context.IconSized(icon, 24, ink)
 			}) {
 				menu.Open = !menu.Open
@@ -161,23 +161,23 @@ func (look Look) floatingMenuName(menu *FloatingMenu) string {
 // floatingAction is one of an open floating menu's actions, rising in after the ones before it. It
 // returns true when touched.
 func (look Look) floatingAction(name string, index int, action Destination) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	arrived := look.Context.Appear(fmt.Sprint(name, " action ", index), time.Duration(150+50*index)*time.Millisecond)
 	layout := ui.Layout{Height: ui.Fixed(56), Padding: ui.Padding{Left: 16, Right: 20, Top: (1 - arrived) * 16}, Gap: 12, AlignY: ui.Center}
-	normal := ui.Look{Fill: scheme.PrimaryContainer, Radius: 28, Shadow: true}
-	return look.Context.Clickable("action "+action.Label, layout, pressedOnly(normal, scheme.SecondaryContainer), func() {
-		look.Context.IconSized(action.Icon, 24, scheme.OnPrimaryContainer)
-		look.Text(action.Label, 16, draw2d.Medium, scheme.OnPrimaryContainer)
+	normal := ui.Look{Fill: roles.PrimaryContainer, Radius: 28, Shadow: true}
+	return look.Context.Clickable("action "+action.Label, layout, pressedOnly(normal, roles.SecondaryContainer), func() {
+		look.Context.IconSized(action.Icon, 24, roles.OnPrimaryContainer)
+		look.Text(action.Label, 16, draw2d.Medium, roles.OnPrimaryContainer)
 	})
 }
 
 // leavingAction is an action of a menu just closed, on its way out: shown is how much of it is
 // left, from 1 to 0. It cannot be touched, and casts no shadow, which would not fade with it.
 func (look Look) leavingAction(action Destination, shown float32) {
-	scheme := look.Roles
+	roles := look.Roles
 	layout := ui.Layout{Height: ui.Fixed(56), Padding: ui.Padding{Left: 16, Right: 20, Top: (1 - shown) * 16}, Gap: 12, AlignY: ui.Center}
-	ink := faded(scheme.OnPrimaryContainer, shown)
-	look.Context.Frame(layout, ui.Look{Fill: faded(scheme.PrimaryContainer, shown), Radius: 28}, func() {
+	ink := faded(roles.OnPrimaryContainer, shown)
+	look.Context.Frame(layout, ui.Look{Fill: faded(roles.PrimaryContainer, shown), Radius: 28}, func() {
 		look.Context.IconSized(action.Icon, 24, ink)
 		look.Text(action.Label, 16, draw2d.Medium, ink)
 	})
@@ -186,22 +186,22 @@ func (look Look) leavingAction(action Destination, shown float32) {
 // SplitButton is a main action joined to a small button that opens its other choices (send, and
 // schedule): it tells which half was touched.
 func (look Look) SplitButton(icon, label string) (action, more bool) {
-	scheme := look.Roles
+	roles := look.Roles
 	look.Context.Push("split " + label)
 	defer look.Context.Pop()
 	look.Context.Box(ui.Layout{Height: ui.Fixed(40), Gap: 2}, func() {
-		leading := ui.Look{Fill: scheme.Primary, Radius: 20}
+		leading := ui.Look{Fill: roles.Primary, Radius: 20}
 		layout := ui.Layout{Height: ui.Grow(), Padding: ui.Padding{Left: 16, Right: 12}, Gap: 8, AlignY: ui.Center}
-		action = look.Context.Clickable("action", layout, pressedOnly(leading, scheme.PrimaryContainer), func() {
+		action = look.Context.Clickable("action", layout, pressedOnly(leading, roles.PrimaryContainer), func() {
 			if icon != "" {
-				look.Context.IconSized(icon, 18, scheme.OnPrimary)
+				look.Context.IconSized(icon, 18, roles.OnPrimary)
 			}
-			look.Text(label, 14, draw2d.Medium, scheme.OnPrimary)
+			look.Text(label, 14, draw2d.Medium, roles.OnPrimary)
 		})
-		trailing := ui.Look{Fill: scheme.Primary, Radius: 20}
+		trailing := ui.Look{Fill: roles.Primary, Radius: 20}
 		layout = ui.Layout{Width: ui.Fixed(40), Height: ui.Grow(), AlignX: ui.Center, AlignY: ui.Center}
-		more = look.Context.Clickable("more", layout, pressedOnly(trailing, scheme.PrimaryContainer), func() {
-			look.Context.IconSized("chevron-down", 18, scheme.OnPrimary)
+		more = look.Context.Clickable("more", layout, pressedOnly(trailing, roles.PrimaryContainer), func() {
+			look.Context.IconSized("chevron-down", 18, roles.OnPrimary)
 		})
 		look.Context.Describe(ui.Description{Label: look.words().MoreOptions})
 	})
@@ -212,7 +212,7 @@ func (look Look) SplitButton(icon, label string) (action, more bool) {
 // others squarer: Material 3 Expressive's connected group (a view, a size, an alignment). It
 // changes selected and returns true when another is touched.
 func (look Look) ButtonGroup(name string, labels []string, selected *int) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	changed := false
 	look.Context.Push(name)
 	defer look.Context.Pop()
@@ -221,10 +221,10 @@ func (look Look) ButtonGroup(name string, labels []string, selected *int) bool {
 			chosen := index == *selected
 			// the chosen one rounds out fully; its corners ease as the choice moves
 			roundness := look.Context.Animate("round "+label, boolFloat(chosen), switchMotion)
-			normal := ui.Look{Fill: scheme.SecondaryContainer, Radius: 8 + 12*roundness}
-			ink := scheme.OnSecondaryContainer
+			normal := ui.Look{Fill: roles.SecondaryContainer, Radius: 8 + 12*roundness}
+			ink := roles.OnSecondaryContainer
 			if chosen {
-				normal.Fill, ink = scheme.Primary, scheme.OnPrimary
+				normal.Fill, ink = roles.Primary, roles.OnPrimary
 			}
 			layout := ui.Layout{Width: ui.Share(1), Height: ui.Grow(), AlignX: ui.Center, AlignY: ui.Center}
 			touched := look.Context.Clickable(label, layout, pressedOnly(normal, stateLayer(ink, 0.2)), func() {
@@ -244,17 +244,17 @@ func (look Look) ButtonGroup(name string, labels []string, selected *int) bool {
 // and a screen reader reads its label. above is how far over the bottom it sits. It returns the
 // index of the tool touched in this frame, or -1.
 func (look Look) FloatingToolbar(name string, tools []Destination, above float32) int {
-	scheme := look.Roles
+	roles := look.Roles
 	insets := look.Context.Insets()
 	touched := -1
 	padding := ui.Padding{Bottom: 16 + insets.Bottom + above}
 	look.Context.Overlay(name, ui.LayerOptions{AlignX: ui.Center, AlignY: ui.End, Padding: padding}, func() {
 		bar := ui.Layout{Height: ui.Fixed(64), Padding: ui.PadXY(8, 0), Gap: 4, AlignY: ui.Center}
-		look.Context.Frame(bar, ui.Look{Fill: scheme.PrimaryContainer, Radius: 32, Shadow: true}, func() {
+		look.Context.Frame(bar, ui.Look{Fill: roles.PrimaryContainer, Radius: 32, Shadow: true}, func() {
 			for index, tool := range tools {
 				layout := ui.Layout{Width: ui.Fixed(48), Height: ui.Fixed(48), AlignX: ui.Center, AlignY: ui.Center}
-				if look.Context.Clickable("tool "+tool.Icon, layout, ui.Looks{Pressed: ui.Look{Fill: stateLayer(scheme.OnPrimaryContainer, 0.12), Radius: 24}}, func() {
-					look.Context.IconSized(tool.Icon, 24, scheme.OnPrimaryContainer)
+				if look.Context.Clickable("tool "+tool.Icon, layout, ui.Looks{Pressed: ui.Look{Fill: stateLayer(roles.OnPrimaryContainer, 0.12), Radius: 24}}, func() {
+					look.Context.IconSized(tool.Icon, 24, roles.OnPrimaryContainer)
 				}) {
 					touched = index
 				}

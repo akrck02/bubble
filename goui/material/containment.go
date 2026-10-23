@@ -43,15 +43,15 @@ type Item struct {
 // ListItem is a row of a list, 72 pixels tall with a supporting line and 56 without. It returns
 // true when the row is touched. name tells it apart from the other rows.
 func (look Look) ListItem(name string, item Item) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	height := float32(56)
 	if item.Supporting != "" {
 		height = 72
 	}
 	layout := ui.Layout{Width: ui.Grow(), Height: ui.Fixed(height), Padding: ui.PadXY(16, 0), Gap: 16, AlignY: ui.Center}
-	looks := ui.Looks{Pressed: ui.Look{Fill: stateLayer(scheme.OnSurface, 0.1)}}
+	looks := ui.Looks{Pressed: ui.Look{Fill: stateLayer(roles.OnSurface, 0.1)}}
 	if item.Selected {
-		chosen := ui.Look{Fill: scheme.SecondaryContainer}
+		chosen := ui.Look{Fill: roles.SecondaryContainer}
 		looks = ui.Looks{Normal: chosen, Hovered: chosen, Pressed: chosen}
 	}
 	return look.Context.Clickable(name, layout, looks, func() {
@@ -64,9 +64,9 @@ func (look Look) ListItem(name string, item Item) bool {
 			look.avatar(item)
 		}
 		look.Context.Box(ui.Layout{Direction: ui.Vertical, Width: ui.Grow(), Gap: 2}, func() {
-			look.Text(item.Headline, 16, draw2d.Regular, scheme.OnSurface)
+			look.Text(item.Headline, 16, draw2d.Regular, roles.OnSurface)
 			if item.Supporting != "" {
-				look.Text(item.Supporting, 14, draw2d.Regular, scheme.OnSurfaceVariant)
+				look.Text(item.Supporting, 14, draw2d.Regular, roles.OnSurfaceVariant)
 			}
 		})
 		if item.Trailing != nil {
@@ -125,12 +125,12 @@ func (look Look) Divider() {
 // details of an order), its chevron turning. Touching the row opens or closes it; it returns true
 // when touched. name tells rows apart.
 func (look Look) ExpandableItem(name string, item Item, open *bool, more func()) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	icon := "chevron-down"
 	if *open {
 		icon = "chevron-up"
 	}
-	item.Trailing = func() { look.Context.IconSized(icon, 24, scheme.OnSurfaceVariant) }
+	item.Trailing = func() { look.Context.IconSized(icon, 24, roles.OnSurfaceVariant) }
 	touched := look.ListItem(name, item)
 	if touched {
 		*open = !*open
@@ -186,15 +186,15 @@ func initialsOf(name string) string {
 // update to install), with an icon and one or two actions under its text. It returns the index of
 // the action touched in this frame, or -1.
 func (look Look) Banner(icon, text string, actions ...string) int {
-	scheme := look.Roles
+	roles := look.Roles
 	touched := -1
 	look.Context.Box(ui.Layout{Direction: ui.Vertical, Width: ui.Grow()}, func() {
 		look.Context.Box(ui.Layout{Width: ui.Grow(), Padding: ui.Padding{Left: 16, Top: 24, Right: 16, Bottom: 8}, Gap: 16}, func() {
 			if icon != "" {
-				look.Avatar("", icon, scheme.Primary, 40)
+				look.Avatar("", icon, roles.Primary, 40)
 			}
 			look.Context.Box(ui.Layout{Width: ui.Grow(), Padding: ui.Padding{Top: 10}}, func() {
-				look.Paragraph(text, 14, draw2d.Regular, scheme.OnSurface)
+				look.Paragraph(text, 14, draw2d.Regular, roles.OnSurface)
 			})
 		})
 		look.Context.Box(ui.Layout{Width: ui.Grow(), Padding: ui.Padding{Right: 8, Bottom: 8}, Gap: 8, AlignX: ui.End}, func() {

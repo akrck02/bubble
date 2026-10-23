@@ -34,6 +34,11 @@ var DefaultAccent = hex("#2C5C9E")
 var InvalidColour = define("bubble.invalid-colour", "a colour must be written as #RRGGBB or #RRGGBBAA")
     InvalidColour means a colour is not written as #RRGGBB or #RRGGBBAA.
 
+var InvalidPalettes = define("bubble.invalid-palettes", "palettes colour only the material style, and every shade must be opaque")
+    InvalidPalettes means a phone's palettes were given outside the material
+    style, which is the only one they colour, or have a shade that is not an
+    opaque colour.
+
 var PaletteShades = [13]int{0, 10, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}
     PaletteShades are the shades of each palette in Android's names: 0 is white,
     500 the middle, 1000 black. Shade s has Material's tone 100 - s/10,
@@ -504,8 +509,8 @@ type Look struct {
 	Roles   Roles        // its colours by Material's names, as the pieces read them
 	Words   Words        // the pieces' own words, in the person's language; the zero value is EnglishWords
 }
-    Look draws the pieces in one frame, with one scheme. It is small: make one
-    in every frame.
+    Look draws the pieces in one frame, in one Bubble theme. It is small:
+    make one in every frame.
 
     Pieces that can be touched return true in the frame they are touched. Each
     takes the name go-ui tells it apart by: its label or icon, or a name given.
@@ -800,7 +805,7 @@ func (look Look) Skeleton(width, height ui.Sizing, radius float32)
 
 func (look Look) Slider(name string, value *float32, minimum, maximum, step float32) bool
     Slider chooses a value between two ends by dragging, in steps (0 for
-    any value): go-ui's slider in the scheme's colours and a finger's size.
+    any value): go-ui's slider in the theme's colours and a finger's size.
     It returns true when the value changed.
 
 func (look Look) Snackbar(snackbar *Snackbar) (actionTouched bool)
@@ -947,8 +952,9 @@ type Roles struct {
 	Outline, OutlineVariant                                                              draw2d.Color
 	// The inverse roles paint what stands out against the screen: a snackbar.
 	InverseSurface, InverseOnSurface, InversePrimary draw2d.Color
-	// Scrim is the surface's colour, see-through: under a bar painted over a scene.
-	Scrim draw2d.Color
+	// BarScrim is the surface's colour, see-through: under a bar painted over a scene. It is not
+	// the theme's Scrim, the darkening behind a dialog.
+	BarScrim draw2d.Color
 }
     Roles are a Bubble theme's colours by Material 3's names, the names the
     pieces were written with. In the material style they are Material's own;
@@ -1048,7 +1054,7 @@ type TopBar struct {
 	Close bool
 	// Actions draws what goes at the bar's end, usually IconButtons; none when nil.
 	Actions func()
-	// OverScene paints the bar see-through (the scheme's scrim), over a scene behind the interface.
+	// OverScene paints the bar see-through (Roles.BarScrim), over a scene behind the interface.
 	OverScene bool
 	// Large writes the title big under the arrow and the actions, for a screen's first level.
 	Large bool

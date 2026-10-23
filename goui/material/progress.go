@@ -54,7 +54,7 @@ func (look Look) ContainedLoadingIndicator(size float32) {
 }
 
 func (look Look) loading(size float32, contained bool) {
-	scheme := look.Roles
+	roles := look.Roles
 	elapsed := time.Since(loadingEpoch).Seconds()
 	// each form holds for a moment, then eases into the next; the whole turns meanwhile
 	const formSeconds = 0.65
@@ -63,13 +63,13 @@ func (look Look) loading(size float32, contained bool) {
 	morph := easeInOut(math.Min((step-math.Floor(step))*1.6, 1))
 	from, to := indicatorShapes[index], indicatorShapes[(index+1)%len(indicatorShapes)]
 	turn := elapsed*2*math.Pi/4.5 + (float64(int(step))+morph)*math.Pi/7
-	fill, scale := scheme.Primary, 0.38
+	fill, scale := roles.Primary, 0.38
 	if contained {
-		fill, scale = scheme.OnPrimaryContainer, 0.3
+		fill, scale = roles.OnPrimaryContainer, 0.3
 	}
 	look.Context.Paint(ui.Layout{Width: ui.Fixed(size), Height: ui.Fixed(size)}, func(area draw2d.Rectangle, drawing *draw2d.List) {
 		if contained {
-			drawing.Rectangle(area, size/2, scheme.PrimaryContainer, draw2d.Transparent, 0)
+			drawing.Rectangle(area, size/2, roles.PrimaryContainer, draw2d.Transparent, 0)
 		}
 		middleX, middleY := float64(area.X+area.Width/2), float64(area.Y+area.Height/2)
 		radius := float64(size) * scale
@@ -153,7 +153,7 @@ const Indeterminate = -1
 // Indeterminate, an arc chasing round. wavy draws the filled part as a wave, as Material 3
 // Expressive does. size is its side, 48 by default in Material.
 func (look Look) CircularProgress(fraction float32, size float32, wavy bool) {
-	scheme := look.Roles
+	roles := look.Roles
 	elapsed := time.Since(loadingEpoch).Seconds()
 	start, sweep := -math.Pi/2, 2*math.Pi*float64(min(max(fraction, 0), 1))
 	if fraction < 0 {
@@ -174,9 +174,9 @@ func (look Look) CircularProgress(fraction float32, size float32, wavy bool) {
 		// the track: what is left to do, after a gap, when the work's length is known
 		if fraction >= 0 && fraction < 1 {
 			gap := 6 / radius
-			arc(drawing, middleX, middleY, radius, start+sweep+gap, 2*math.Pi-sweep-2*gap, 0, elapsed, stroke, scheme.SecondaryContainer)
+			arc(drawing, middleX, middleY, radius, start+sweep+gap, 2*math.Pi-sweep-2*gap, 0, elapsed, stroke, roles.SecondaryContainer)
 		}
-		arc(drawing, middleX, middleY, radius, start, sweep, amplitude, elapsed, stroke, scheme.Primary)
+		arc(drawing, middleX, middleY, radius, start, sweep, amplitude, elapsed, stroke, roles.Primary)
 	})
 }
 
@@ -197,7 +197,7 @@ func arc(drawing *draw2d.List, middleX, middleY, radius, start, sweep, amplitude
 // travelling wave and the rest a flat track ending in a stop dot, as Material 3 Expressive draws
 // it; with Indeterminate, a wave runs along it.
 func (look Look) WavyProgress(fraction float32) {
-	scheme := look.Roles
+	roles := look.Roles
 	elapsed := time.Since(loadingEpoch).Seconds()
 	look.Context.Paint(ui.Layout{Width: ui.Grow(), Height: ui.Fixed(12)}, func(area draw2d.Rectangle, drawing *draw2d.List) {
 		const stroke, amplitude, wavelength = 4.0, 3.0, 40.0
@@ -205,13 +205,13 @@ func (look Look) WavyProgress(fraction float32) {
 		middle := float64(area.Y + area.Height/2)
 		wave := func(from, to float64) {
 			for x := from; x <= to; x += 1 {
-				dot(drawing, x, middle+amplitude*math.Sin(2*math.Pi*(x-left)/wavelength-elapsed*5), stroke, scheme.Primary)
+				dot(drawing, x, middle+amplitude*math.Sin(2*math.Pi*(x-left)/wavelength-elapsed*5), stroke, roles.Primary)
 			}
 		}
 		flat := func(from, to float64) {
 			if to > from {
 				drawing.Rectangle(draw2d.Rectangle{X: float32(from - stroke/2), Y: float32(middle - stroke/2), Width: float32(to - from + stroke), Height: stroke},
-					stroke/2, scheme.SecondaryContainer, draw2d.Transparent, 0)
+					stroke/2, roles.SecondaryContainer, draw2d.Transparent, 0)
 			}
 		}
 		length := right - left
@@ -229,7 +229,7 @@ func (look Look) WavyProgress(fraction float32) {
 		wave(left, end)
 		flat(end+8, right)
 		if fraction < 1 {
-			dot(drawing, right, middle, stroke, scheme.Primary) // the stop: where the work ends
+			dot(drawing, right, middle, stroke, roles.Primary) // the stop: where the work ends
 		}
 	})
 	look.Context.RequestFrame(frameDelay)
@@ -238,10 +238,10 @@ func (look Look) WavyProgress(fraction float32) {
 // Skeleton stands in for content still coming (a picture, a line of text): a quiet block with a
 // light passing across it. A row of them in the content's shape tells what will be there.
 func (look Look) Skeleton(width, height ui.Sizing, radius float32) {
-	scheme := look.Roles
+	roles := look.Roles
 	elapsed := time.Since(loadingEpoch).Seconds()
-	base := scheme.SurfaceContainerHighest
-	light := mix(base, scheme.Surface, 0.6)
+	base := roles.SurfaceContainerHighest
+	light := mix(base, roles.Surface, 0.6)
 	look.Context.Paint(ui.Layout{Width: width, Height: height}, func(area draw2d.Rectangle, drawing *draw2d.List) {
 		drawing.Rectangle(area, radius, base, draw2d.Transparent, 0)
 		// a soft band of light crossing every 1.5 seconds, made of strips fading out at its sides
@@ -264,11 +264,11 @@ func (look Look) Skeleton(width, height ui.Sizing, radius float32) {
 // fraction is work of unknown length: a piece of the bar runs along it, and it asks for frames
 // while shown.
 func (look Look) LinearProgress(fraction float32) {
-	scheme := look.Roles
+	roles := look.Roles
 	track := ui.Layout{Width: ui.Grow(), Height: ui.Fixed(4)}
 	if fraction >= 0 {
-		look.Context.Frame(track, ui.Look{Fill: scheme.SecondaryContainer, Radius: 2}, func() {
-			look.Context.Frame(ui.Layout{Width: ui.Share(max(min(fraction, 1), 0.001)), Height: ui.Grow()}, ui.Look{Fill: scheme.Primary, Radius: 2}, nil)
+		look.Context.Frame(track, ui.Look{Fill: roles.SecondaryContainer, Radius: 2}, func() {
+			look.Context.Frame(ui.Layout{Width: ui.Share(max(min(fraction, 1), 0.001)), Height: ui.Grow()}, ui.Look{Fill: roles.Primary, Radius: 2}, nil)
 			look.Context.Box(ui.Layout{Width: ui.Share(max(1-fraction, 0.001))}, nil)
 		})
 		return
@@ -277,9 +277,9 @@ func (look Look) LinearProgress(fraction float32) {
 	phase := float32(math.Mod(float64(time.Now().UnixMilli())/1500, 1))
 	before := max(phase*1.3-0.3, 0)
 	length := min(phase*1.3, 1) - before
-	look.Context.Frame(track, ui.Look{Fill: scheme.SecondaryContainer, Radius: 2}, func() {
+	look.Context.Frame(track, ui.Look{Fill: roles.SecondaryContainer, Radius: 2}, func() {
 		look.Context.Box(ui.Layout{Width: ui.Share(before + 0.001)}, nil)
-		look.Context.Frame(ui.Layout{Width: ui.Share(length + 0.001), Height: ui.Grow()}, ui.Look{Fill: scheme.Primary, Radius: 2}, nil)
+		look.Context.Frame(ui.Layout{Width: ui.Share(length + 0.001), Height: ui.Grow()}, ui.Look{Fill: roles.Primary, Radius: 2}, nil)
 		look.Context.Box(ui.Layout{Width: ui.Share(max(1-before-length, 0) + 0.001)}, nil)
 	})
 	look.Context.RequestFrame(16 * time.Millisecond)

@@ -39,17 +39,17 @@ func (tabs *tabsState) draw(program *gallery, look material.Look) {
 
 // places is a carousel of the island's places, over a list that still scrolls up and down.
 func (tabs *tabsState) places(look material.Look) {
-	context, scheme := look.Context, look.Roles
+	context, roles := look.Context, look.Roles
 	page(context, "places", func() {
 		look.Heading("Places to see")
-		tints := []draw2d.Color{scheme.PrimaryContainer, scheme.SecondaryContainer, scheme.ErrorContainer, scheme.SurfaceContainerHighest}
+		tints := []draw2d.Color{roles.PrimaryContainer, roles.SecondaryContainer, roles.ErrorContainer, roles.SurfaceContainerHighest}
 		names := []string{"North Cape", "The harbour", "Seal Rock", "Old Tower", "Sand Bar", "East Point"}
 		icons := []string{"mountain", "anchor", "fish", "castle", "waves", "sunrise"}
 		look.Carousel("places", &tabs.carousel, len(names), 160, func(index int) {
 			look.CarouselItem(200, tints[index%len(tints)], icons[index], names[index])
 		})
 		look.Paragraph("Slide the row sideways: it glides on and settles at a place. Up and down, the page scrolls.",
-			14, draw2d.Regular, scheme.OnSurfaceVariant)
+			14, draw2d.Regular, roles.OnSurfaceVariant)
 		look.Heading("Browse the coast")
 		look.MultiBrowseCarousel("coast", &tabs.coast, len(names), 200, 180, func(index int, width float32) {
 			title := names[index]
@@ -63,29 +63,29 @@ func (tabs *tabsState) places(look material.Look) {
 
 // cards shows the three kinds of cards and tags.
 func (tabs *tabsState) cards(look material.Look) {
-	context, scheme := look.Context, look.Roles
+	context, roles := look.Context, look.Roles
 	page(context, "cards", func() {
 		look.OutlinedCard(func() {
 			context.Image(coast()[3], ui.Layout{Width: ui.Grow(), Height: ui.Fixed(160)}, 12)
-			look.Text("The north light at night", 18, draw2d.Medium, scheme.OnSurface)
-			look.Paragraph("Its lamp turns every ten seconds, seen eighteen miles out.", 14, draw2d.Regular, scheme.OnSurfaceVariant)
+			look.Text("The north light at night", 18, draw2d.Medium, roles.OnSurface)
+			look.Paragraph("Its lamp turns every ten seconds, seen eighteen miles out.", 14, draw2d.Regular, roles.OnSurfaceVariant)
 		})
 		look.Card(func() {
-			look.Text("Tonight's watch", 18, draw2d.Medium, scheme.OnSurface)
-			look.Paragraph("Two lighthouses lit, two dark. The wind turns west after midnight.", 14, draw2d.Regular, scheme.OnSurfaceVariant)
+			look.Text("Tonight's watch", 18, draw2d.Medium, roles.OnSurface)
+			look.Paragraph("Two lighthouses lit, two dark. The wind turns west after midnight.", 14, draw2d.Regular, roles.OnSurfaceVariant)
 			context.Box(ui.Layout{Gap: 8}, func() {
-				look.Tag("2 lit", scheme.OnPrimaryContainer, scheme.PrimaryContainer)
-				look.Tag("2 dark", scheme.OnErrorContainer, scheme.ErrorContainer)
+				look.Tag("2 lit", roles.OnPrimaryContainer, roles.PrimaryContainer)
+				look.Tag("2 dark", roles.OnErrorContainer, roles.ErrorContainer)
 			})
 		})
-		look.ElevatedCard(func() { look.Text("An elevated card", 16, draw2d.Medium, scheme.OnSurface) })
-		look.OutlinedCard(func() { look.Text("An outlined card", 16, draw2d.Medium, scheme.OnSurface) })
+		look.ElevatedCard(func() { look.Text("An elevated card", 16, draw2d.Medium, roles.OnSurface) })
+		look.OutlinedCard(func() { look.Text("An outlined card", 16, draw2d.Medium, roles.OnSurface) })
 	})
 }
 
 // bay sails a boat with the stick: the boat keeps moving while the stick is held.
 func (tabs *tabsState) bay(look material.Look) {
-	context, scheme := look.Context, look.Roles
+	context, roles := look.Context, look.Roles
 	now := time.Now()
 	step := float32(now.Sub(tabs.lastStep).Seconds())
 	tabs.lastStep = now
@@ -102,9 +102,9 @@ func (tabs *tabsState) bay(look material.Look) {
 		boat := float32(28)
 		padding := ui.Padding{Left: tabs.boatX * (size - boat), Top: tabs.boatY * (size - boat)}
 		context.Frame(ui.Layout{Width: ui.Fixed(size), Height: ui.Fixed(size), Padding: padding},
-			ui.Look{Fill: scheme.PrimaryContainer, Radius: 16}, func() {
+			ui.Look{Fill: roles.PrimaryContainer, Radius: 16}, func() {
 				context.Frame(ui.Layout{Width: ui.Fixed(boat), Height: ui.Fixed(boat), AlignX: ui.Center, AlignY: ui.Center},
-					ui.Look{Fill: scheme.Primary, Radius: boat / 2}, func() { context.IconSized("sailboat", 18, scheme.OnPrimary) })
+					ui.Look{Fill: roles.Primary, Radius: boat / 2}, func() { context.IconSized("sailboat", 18, roles.OnPrimary) })
 			})
 		context.Spacer()
 		look.Stick("stick", &tabs.stick, 128)

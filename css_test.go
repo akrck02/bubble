@@ -67,8 +67,9 @@ func TestOnGlassNothingIsOpaqueUnlessTheSystemAsksForLessTransparency(test *test
 var cssRule = regexp.MustCompile(`([^{}]+)\{([^{}]*)\}`)
 
 // aState marks a selector that only changes a part another rule already draws: a state, such as
-// hover, or a style or finish (:root[data-glass]) repainting a part whose own rule pairs it.
-var aState = regexp.MustCompile(`:(hover|active|focus|focus-visible|focus-within|checked|disabled)|::|^:root\[data-`)
+// hover, or the glass finish repainting a part whose own rule pairs it. Material's rules repaint
+// with colours of their own, so they must pair each fill with its text.
+var aState = regexp.MustCompile(`:(hover|active|focus|focus-visible|focus-within|checked|disabled)|::|^:root\[data-glass\]`)
 
 // aFill finds a background, up to the end of its declaration or of the block.
 var aFill = regexp.MustCompile(`(?:^|;)\s*background(?:-color)?:\s*([^;]+)`)
@@ -204,6 +205,18 @@ func TestTheMaterialStyleWritesItsTypeSpaceAndLadder(test *testing.T) {
 	for _, wanted := range []string{"--control-height: 48px", "--text-heading: 22px", "--font: Roboto", "--container-highest:", "--accent-container:"} {
 		if !strings.Contains(block, wanted) {
 			test.Errorf("the material block has no %s", wanted)
+		}
+	}
+}
+
+func TestADangerousButtonKeepsItsRedInEveryStyle(test *testing.T) {
+	for _, rule := range cssRules(test) {
+		declares := aColour.MatchString(rule.declarations) && !strings.Contains(rule.declarations, "var(--danger)")
+		for _, selector := range rule.selectors {
+			coloursMost := strings.Contains(selector, ".button") && strings.Contains(selector, ":not(")
+			if declares && coloursMost && !aState.MatchString(selector) && !strings.Contains(selector, ".danger") {
+				test.Errorf("%s colours every button but the excluded ones, and does not exclude .danger", selector)
+			}
 		}
 	}
 }

@@ -113,6 +113,21 @@ captures below were taken with xvfb.
   Material differs by 12 % (light) and 15 % (dark), as paper does (10 %). The rest is Go UI's own
   text field, which is outlined where the web's is filled.
 
+The review found, and these were fixed:
+
+- The gallery's compiled program had been committed. It is removed and ignored now, but it is still
+  in the branch's history: rewriting the branch needs the author's word.
+- Danger buttons took the accent's colour in Material.
+- The CSS test skipped every Material rule; it now checks them, and three rules gained their text
+  colour.
+- Go's quiet ink in Material was the outline, under 4.5 for text; it is now Bubble's quiet ink.
+- Palettes are checked: outside Material, or with a shade that is not opaque, they are refused
+  with `bubble.invalid-palettes`. The palette test compares every colour, in both modes.
+- The bar's scrim is `Roles.BarScrim`, apart from the theme's `Scrim`, and is checked against the
+  fixture.
+- The parts' variables and comments no longer speak of a scheme.
+- The guide's example is a whole program, `goui/examples/lighthouses`, which builds with the rest.
+
 Not done, for a person to look at:
 
 - Real phones, and a real wallpaper's palettes.

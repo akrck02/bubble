@@ -18,6 +18,18 @@ type Palettes struct {
 	Accent1, Accent2, Accent3, Neutral1, Neutral2 [13]Color
 }
 
+// opaque tells whether every shade of every palette is an opaque colour, as a phone's are.
+func (palettes Palettes) opaque() bool {
+	for _, palette := range [][13]Color{palettes.Accent1, palettes.Accent2, palettes.Accent3, palettes.Neutral1, palettes.Neutral2} {
+		for _, shade := range palette {
+			if shade.Alpha != 0xFF {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 // The indexes of the shades in a palette, by their Android names.
 const (
 	shade0 = iota

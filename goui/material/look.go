@@ -15,7 +15,7 @@ func (look Look) safePadding(margin float32) ui.Padding {
 	return ui.Padding{Left: margin + insets.Left, Top: margin + insets.Top, Right: margin + insets.Right, Bottom: margin + insets.Bottom}
 }
 
-// Look draws the pieces in one frame, with one scheme. It is small: make one in every frame.
+// Look draws the pieces in one frame, in one Bubble theme. It is small: make one in every frame.
 //
 // Pieces that can be touched return true in the frame they are touched. Each takes the name go-ui
 // tells it apart by: its label or icon, or a name given. Two pieces with the same name in one scope

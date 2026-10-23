@@ -3,3 +3,6 @@
 /dist/
 .env
 .DS_Store
+/goui/gallery
+/goui/showcase
+/goui/herbarium

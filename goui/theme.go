@@ -92,7 +92,6 @@ func materialy(result *ui.Theme, theme bubble.Theme) {
 		base = ui.DarkTheme()
 	}
 	result.Sunken, result.Selection = colour(colours.ContainerHighest), colour(colours.AccentContainer)
-	result.InkQuiet = colour(colours.ControlLine)
 	result.LineHeight, result.HeadingLineHeight = base.LineHeight, base.HeadingLineHeight
 	result.ButtonWeight = draw2d.Medium // Material's labels; pills and room as Bubble shapes them
 	result.PrimaryEdge, result.EdgeWidth = base.PrimaryEdge, base.EdgeWidth

@@ -266,6 +266,7 @@ input[type="checkbox"]:disabled { opacity: 0.6; cursor: not-allowed; }
   border-color: transparent;
   background: var(--container-low);
   box-shadow: none;
+  color: var(--ink);
 }
 
 .pill {
@@ -426,7 +427,7 @@ input[type="checkbox"]:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
 :root[data-style="material"] .places a:hover svg { background: var(--sunken); }
-:root[data-style="material"] .places a[aria-current="page"] svg { background: var(--accent-tint); }
+:root[data-style="material"] .places a[aria-current="page"] svg { background: var(--accent-tint); color: var(--on-accent-tint); }
 
 /* Pages read best narrow; a page that lays out a wide grid, such as a calendar, adds .wide. */
 .page {
@@ -954,6 +955,7 @@ input[type="checkbox"]:disabled { opacity: 0.6; cursor: not-allowed; }
   border-color: transparent;
   background: var(--container-low);
   box-shadow: none;
+  color: var(--ink);
 }
 
 :root[data-style="material"] .list-item {
@@ -965,7 +967,7 @@ input[type="checkbox"]:disabled { opacity: 0.6; cursor: not-allowed; }
 :root[data-style="material"] .list-item.done { background: transparent; }
 
 :root[data-style="material"] .button { font-weight: 500; }
-:root[data-style="material"] .button:not(.primary, .tonal, .ghost) { color: var(--accent-ink); }
+:root[data-style="material"] .button:not(.primary, .tonal, .ghost, .danger) { color: var(--accent-ink); }
 
 :root[data-style="material"] .button.primary,
 :root[data-style="material"] .button.primary:active {

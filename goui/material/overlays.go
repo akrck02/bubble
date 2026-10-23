@@ -30,7 +30,7 @@ const (
 // the middle with a title, a text and one or two actions. The program shows it with an if while it
 // wants an answer, and stops when the answer is not Open. name tells dialogs apart.
 func (look Look) Dialog(name string, dialog Dialog) Answer {
-	scheme := look.Roles
+	roles := look.Roles
 	width, _ := look.Context.Size()
 	answer := Open
 	// it rises into place as the screen behind darkens
@@ -42,20 +42,20 @@ func (look Look) Dialog(name string, dialog Dialog) Answer {
 		Leave: ui.Leave{Duration: leavingMotion * 3 / 4}} // it fades out where it is
 	card := ui.Layout{Direction: ui.Vertical, Width: ui.Grow(), Padding: ui.Pad(24), Gap: 16}
 	dismissed := look.Context.Modal(name, options, func() {
-		look.Context.Frame(card, ui.Look{Fill: scheme.SurfaceContainerHigh, Radius: 28, Shadow: true}, func() {
+		look.Context.Frame(card, ui.Look{Fill: roles.SurfaceContainerHigh, Radius: 28, Shadow: true}, func() {
 			alignX := ui.Start
 			if dialog.Icon != "" {
 				alignX = ui.Center
 				look.Context.Box(ui.Layout{Width: ui.Grow(), AlignX: ui.Center}, func() {
-					look.Context.IconSized(dialog.Icon, 24, scheme.Primary)
+					look.Context.IconSized(dialog.Icon, 24, roles.Primary)
 				})
 			}
 			look.Context.Box(ui.Layout{Width: ui.Grow(), AlignX: alignX}, func() {
-				look.Text(dialog.Title, 24, draw2d.Regular, scheme.OnSurface)
+				look.Text(dialog.Title, 24, draw2d.Regular, roles.OnSurface)
 				look.Context.Describe(ui.Description{Role: ui.HeadingRole})
 			})
 			if dialog.Text != "" {
-				look.Paragraph(dialog.Text, 14, draw2d.Regular, scheme.OnSurfaceVariant)
+				look.Paragraph(dialog.Text, 14, draw2d.Regular, roles.OnSurfaceVariant)
 			}
 			if dialog.Content != nil {
 				dialog.Content()
@@ -80,7 +80,7 @@ func (look Look) Dialog(name string, dialog Dialog) Answer {
 // meanwhile: choices for what was touched, a short form. It returns true when the person touches
 // outside it (or presses Escape); the program then stops showing it. name tells sheets apart.
 func (look Look) BottomSheet(name string, content func()) (dismissed bool) {
-	scheme := look.Roles
+	roles := look.Roles
 	insets := look.Context.Insets()
 	width, _ := look.Context.Size()
 	// it slides up from below the screen as the screen darkens
@@ -91,10 +91,10 @@ func (look Look) BottomSheet(name string, content func()) (dismissed bool) {
 	sheet := ui.Layout{Direction: ui.Vertical, Width: ui.Grow(),
 		Padding: ui.Padding{Left: 16 + insets.Left, Top: 16, Right: 16 + insets.Right, Bottom: 16 + insets.Bottom}, Gap: 8}
 	return look.Context.Modal(name, options, func() {
-		look.Context.Frame(sheet, ui.Look{Fill: scheme.SurfaceContainerLow, Radius: 28}, func() {
+		look.Context.Frame(sheet, ui.Look{Fill: roles.SurfaceContainerLow, Radius: 28}, func() {
 			handle := ui.Layout{Width: ui.Fixed(32), Height: ui.Fixed(4)}
 			look.Context.Box(ui.Layout{Width: ui.Grow(), AlignX: ui.Center, Padding: ui.Padding{Bottom: 8}}, func() {
-				look.Context.Frame(handle, ui.Look{Fill: stateLayer(scheme.OnSurfaceVariant, 0.4), Radius: 2}, nil)
+				look.Context.Frame(handle, ui.Look{Fill: stateLayer(roles.OnSurfaceVariant, 0.4), Radius: 2}, nil)
 			})
 			content()
 		})
@@ -106,7 +106,7 @@ func (look Look) BottomSheet(name string, content func()) (dismissed bool) {
 // returns true when it should close: the cross touched, a touch outside, the system's back. name
 // tells side sheets apart.
 func (look Look) SideSheet(name, title string, content func()) (closed bool) {
-	scheme := look.Roles
+	roles := look.Roles
 	insets := look.Context.Insets()
 	width, _ := look.Context.Size()
 	sheetWidth := min(400, width-56)
@@ -117,9 +117,9 @@ func (look Look) SideSheet(name, title string, content func()) (closed bool) {
 	dismissed := look.Context.Modal(name, options, func() {
 		sheet := ui.Layout{Direction: ui.Vertical, Width: ui.Grow(), Height: ui.Grow(),
 			Padding: ui.Padding{Left: 24, Top: 12 + insets.Top, Right: 12 + insets.Right, Bottom: 24 + insets.Bottom}, Gap: 8}
-		look.Context.Frame(sheet, ui.Look{Fill: scheme.SurfaceContainerLow, Radius: 16, Shadow: true}, func() {
+		look.Context.Frame(sheet, ui.Look{Fill: roles.SurfaceContainerLow, Radius: 16, Shadow: true}, func() {
 			look.Context.Box(ui.Layout{Width: ui.Grow(), Height: ui.Fixed(56), AlignY: ui.Center}, func() {
-				look.Context.Box(ui.Layout{Width: ui.Grow()}, func() { look.Text(title, 22, draw2d.Regular, scheme.OnSurfaceVariant) })
+				look.Context.Box(ui.Layout{Width: ui.Grow()}, func() { look.Text(title, 22, draw2d.Regular, roles.OnSurfaceVariant) })
 				closed = look.NamedIconButton("x", look.words().Close)
 			})
 			content()
@@ -159,7 +159,7 @@ func (look Look) Snackbar(snackbar *Snackbar) (actionTouched bool) {
 		return false
 	}
 	look.Context.RequestFrame(left)
-	scheme := look.Roles
+	roles := look.Roles
 	insets := look.Context.Insets()
 	width, _ := look.Context.Size()
 	arrived := look.Context.Appear("snackbar", arrivingMotion) // it slides up from the bottom edge
@@ -169,17 +169,17 @@ func (look Look) Snackbar(snackbar *Snackbar) (actionTouched bool) {
 		Width: ui.Fixed(min(600, width-padding.Left-padding.Right)), Leave: ui.Leave{Duration: leavingMotion}}
 	look.Context.Overlay("snackbar", options, func() {
 		bar := ui.Layout{Width: ui.Grow(), Height: ui.Fixed(48), Padding: ui.Padding{Left: 16, Right: 8}, Gap: 8, AlignY: ui.Center}
-		look.Context.Frame(bar, ui.Look{Fill: scheme.InverseSurface, Radius: 4, Shadow: true}, func() {
+		look.Context.Frame(bar, ui.Look{Fill: roles.InverseSurface, Radius: 4, Shadow: true}, func() {
 			look.Context.Box(ui.Layout{Width: ui.Grow()}, func() {
-				look.Text(snackbar.Text, 14, draw2d.Regular, scheme.InverseOnSurface)
+				look.Text(snackbar.Text, 14, draw2d.Regular, roles.InverseOnSurface)
 			})
 			if snackbar.Action == "" {
 				return
 			}
 			layout := ui.Layout{Height: ui.Fixed(40), Padding: ui.PadXY(12, 0), AlignY: ui.Center}
 			normal := ui.Look{Radius: 20}
-			actionTouched = look.Context.Clickable("snackbar action", layout, pressedOnly(normal, stateLayer(scheme.InversePrimary, 0.12)), func() {
-				look.Text(snackbar.Action, 14, draw2d.Medium, scheme.InversePrimary)
+			actionTouched = look.Context.Clickable("snackbar action", layout, pressedOnly(normal, stateLayer(roles.InversePrimary, 0.12)), func() {
+				look.Text(snackbar.Action, 14, draw2d.Medium, roles.InversePrimary)
 			})
 		})
 	})
@@ -220,7 +220,7 @@ type Sheet struct {
 // to most of the screen, and a finger drags it by its handle between the two; let go, it settles
 // where it was heading. Its content scrolls inside it. name tells sheets apart.
 func (look Look) StandardSheet(name string, sheet *Sheet, peek float32, content func()) {
-	scheme := look.Roles
+	roles := look.Roles
 	insets := look.Context.Insets()
 	width, height := look.Context.Size()
 	full := max(height-insets.Top-56-sheet.Above, peek)
@@ -247,7 +247,7 @@ func (look Look) StandardSheet(name string, sheet *Sheet, peek float32, content 
 		look.Context.Frame(cut, ui.Look{Clip: true}, func() {
 			panel := ui.Layout{Direction: ui.Vertical, Width: ui.Grow(), Height: ui.Fixed(shown + hiddenCorners),
 				Padding: ui.Padding{Bottom: hiddenCorners + inside}}
-			look.Context.Frame(panel, ui.Look{Fill: scheme.SurfaceContainerLow, Radius: 28}, func() {
+			look.Context.Frame(panel, ui.Look{Fill: roles.SurfaceContainerLow, Radius: 28}, func() {
 				look.sheetHandle(name, sheet, full-peek)
 				look.Context.ScrollArea(name+" content", ui.Layout{Direction: ui.Vertical, Width: ui.Grow(), Height: ui.Grow()}, content)
 			})

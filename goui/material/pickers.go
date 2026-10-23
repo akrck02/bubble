@@ -43,9 +43,9 @@ func (look Look) DatePicker(name string, picker *DatePicker, date *time.Time) An
 		picker.open, picker.day = true, dayOf(*date)
 		picker.month = time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, date.Location())
 	}
-	scheme := look.Roles
+	roles := look.Roles
 	answer := look.Dialog(name, Dialog{Title: names.Title, Confirm: names.Confirm, Dismiss: names.Dismiss, Content: func() {
-		look.Text(fmt.Sprintf("%d %s %d", picker.day.Day(), names.Months[picker.day.Month()-1], picker.day.Year()), 28, draw2d.Regular, scheme.OnSurface)
+		look.Text(fmt.Sprintf("%d %s %d", picker.day.Day(), names.Months[picker.day.Month()-1], picker.day.Year()), 28, draw2d.Regular, roles.OnSurface)
 		look.Divider()
 		look.monthBar(picker, names)
 		look.monthGrid(picker, names)
@@ -77,13 +77,13 @@ func (look Look) monthBar(picker *DatePicker, names DateNames) {
 // monthGrid lays the month's days under the weekdays, Monday first, the chosen one filled and
 // today ringed.
 func (look Look) monthGrid(picker *DatePicker, names DateNames) {
-	scheme := look.Roles
+	roles := look.Roles
 	today := dayOf(time.Now())
 	week := func(content func()) { look.Context.Box(ui.Layout{Width: ui.Grow()}, content) }
 	cell := ui.Layout{Width: ui.Share(1), Height: ui.Fixed(44), AlignX: ui.Center, AlignY: ui.Center}
 	week(func() {
 		for _, weekday := range names.Weekdays {
-			look.Context.Box(cell, func() { look.Text(weekday, 14, draw2d.Regular, scheme.OnSurface) })
+			look.Context.Box(cell, func() { look.Text(weekday, 14, draw2d.Regular, roles.OnSurface) })
 		}
 	})
 	blanks := (int(picker.month.Weekday()) + 6) % 7 // Monday first
@@ -105,18 +105,18 @@ func (look Look) monthGrid(picker *DatePicker, names DateNames) {
 }
 
 func (look Look) dayCell(date time.Time, chosen, today bool, cell ui.Layout) bool {
-	scheme := look.Roles
-	circle, ink := ui.Look{Radius: 20}, scheme.OnSurface
+	roles := look.Roles
+	circle, ink := ui.Look{Radius: 20}, roles.OnSurface
 	switch {
 	case chosen:
-		circle, ink = ui.Look{Fill: scheme.Primary, Radius: 20}, scheme.OnPrimary
+		circle, ink = ui.Look{Fill: roles.Primary, Radius: 20}, roles.OnPrimary
 	case today:
-		circle, ink = ui.Look{Border: scheme.Primary, BorderWidth: 1, Radius: 20}, scheme.Primary
+		circle, ink = ui.Look{Border: roles.Primary, BorderWidth: 1, Radius: 20}, roles.Primary
 	}
 	touched := false
 	look.Context.Box(cell, func() {
 		layout := ui.Layout{Width: ui.Fixed(40), Height: ui.Fixed(40), AlignX: ui.Center, AlignY: ui.Center}
-		touched = look.Context.Clickable(date.Format("day 2006-01-02"), layout, pressedOnly(circle, stateLayer(scheme.OnSurface, 0.12)), func() {
+		touched = look.Context.Clickable(date.Format("day 2006-01-02"), layout, pressedOnly(circle, stateLayer(roles.OnSurface, 0.12)), func() {
 			look.Text(fmt.Sprint(date.Day()), 14, draw2d.Regular, ink)
 		})
 		look.Context.Describe(ui.Description{Selected: chosen})
@@ -177,11 +177,11 @@ func (look Look) TimePicker(name string, picker *TimePicker, date *time.Time) An
 
 // timeHeader shows the hour and the minute chosen, in large boxes that choose what the dial shows.
 func (look Look) timeHeader(picker *TimePicker) {
-	scheme := look.Roles
+	roles := look.Roles
 	box := func(text string, chosen bool) bool {
-		normal, ink := ui.Look{Fill: scheme.SurfaceContainerHighest, Radius: 8}, scheme.OnSurface
+		normal, ink := ui.Look{Fill: roles.SurfaceContainerHighest, Radius: 8}, roles.OnSurface
 		if chosen {
-			normal, ink = ui.Look{Fill: scheme.PrimaryContainer, Radius: 8}, scheme.OnPrimaryContainer
+			normal, ink = ui.Look{Fill: roles.PrimaryContainer, Radius: 8}, roles.OnPrimaryContainer
 		}
 		layout := ui.Layout{Width: ui.Fixed(96), Height: ui.Fixed(80), AlignX: ui.Center, AlignY: ui.Center}
 		touched := look.Context.Clickable("time "+text, layout, pressedOnly(normal, stateLayer(ink, 0.12)), func() {
@@ -194,7 +194,7 @@ func (look Look) timeHeader(picker *TimePicker) {
 		if box(fmt.Sprintf("%02d", picker.hour), !picker.minutes) {
 			picker.minutes = false
 		}
-		look.Text(":", 48, draw2d.Regular, scheme.OnSurface)
+		look.Text(":", 48, draw2d.Regular, roles.OnSurface)
 		if box(fmt.Sprintf("%02d", picker.minute), picker.minutes) {
 			picker.minutes = true
 		}
@@ -253,9 +253,9 @@ func (picker *TimePicker) choose(area draw2d.Rectangle, x, y float32) {
 
 // paintDial draws the face, the numbers and the hand.
 func (look Look) paintDial(area draw2d.Rectangle, drawing *draw2d.List, picker *TimePicker) {
-	scheme := look.Roles
+	roles := look.Roles
 	picker.dial = area
-	drawing.Rectangle(area, area.Width/2, scheme.SurfaceContainerHighest, draw2d.Transparent, 0)
+	drawing.Rectangle(area, area.Width/2, roles.SurfaceContainerHighest, draw2d.Transparent, 0)
 	middleX, middleY := float64(area.X+area.Width/2), float64(area.Y+area.Height/2)
 	outer, inner := float64(area.Width)*0.4, float64(area.Width)*0.26
 	// the hand: from the middle to the value chosen, ending in a circle round it
@@ -270,15 +270,15 @@ func (look Look) paintDial(area draw2d.Rectangle, drawing *draw2d.List, picker *
 	}
 	handX, handY := middleX+reach*math.Sin(angle), middleY-reach*math.Cos(angle)
 	for step := 0.0; step <= 1; step += 0.02 {
-		dot(drawing, middleX+(handX-middleX)*step, middleY+(handY-middleY)*step, 2, scheme.Primary)
+		dot(drawing, middleX+(handX-middleX)*step, middleY+(handY-middleY)*step, 2, roles.Primary)
 	}
-	dot(drawing, middleX, middleY, 8, scheme.Primary)
-	dot(drawing, handX, handY, 48, scheme.Primary)
+	dot(drawing, middleX, middleY, 8, roles.Primary)
+	dot(drawing, handX, handY, 48, roles.Primary)
 	number := func(text string, angle, distance float64, chosen bool) {
 		x, y := middleX+distance*math.Sin(angle), middleY-distance*math.Cos(angle)
-		ink := scheme.OnSurface
+		ink := roles.OnSurface
 		if chosen {
-			ink = scheme.OnPrimary
+			ink = roles.OnPrimary
 		}
 		size := float32(16)
 		if distance == inner {

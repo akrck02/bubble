@@ -19,8 +19,9 @@ type Roles struct {
 	Outline, OutlineVariant                                                              draw2d.Color
 	// The inverse roles paint what stands out against the screen: a snackbar.
 	InverseSurface, InverseOnSurface, InversePrimary draw2d.Color
-	// Scrim is the surface's colour, see-through: under a bar painted over a scene.
-	Scrim draw2d.Color
+	// BarScrim is the surface's colour, see-through: under a bar painted over a scene. It is not
+	// the theme's Scrim, the darkening behind a dialog.
+	BarScrim draw2d.Color
 }
 
 // scrimOpacity is how much of the surface a bar over a scene keeps.
@@ -40,7 +41,7 @@ func RolesOf(theme bubble.Theme) Roles {
 		SurfaceContainerHigh: colour(colors.ContainerHigh), SurfaceContainerHighest: colour(colors.ContainerHighest),
 		Outline: colour(colors.ControlLine), OutlineVariant: colour(colors.Line),
 		InverseSurface: colour(colors.Inverse), InverseOnSurface: colour(colors.OnInverse), InversePrimary: colour(colors.InverseAccent),
-		Scrim: colour(colors.Background.WithAlpha(scrimOpacity)),
+		BarScrim: colour(colors.Background.WithAlpha(scrimOpacity)),
 	}
 }
 

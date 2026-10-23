@@ -32,19 +32,19 @@ type Field struct {
 // or an error and a count of characters under it. On a phone the on-screen keyboard comes up while
 // it is typed in. It returns true when the text changed. name tells fields apart.
 func (look Look) TextField(name string, text *string, field Field) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	words := look.words()
 	look.Context.SetEditingWords(ui.EditingWords{Cut: words.Cut, Copy: words.Copy, Paste: words.Paste, SelectAll: words.SelectAll})
 	changed := false
 	focused := look.Context.FieldFocused(name)
 	look.Context.Box(ui.Layout{Direction: ui.Vertical, Width: ui.Grow(), Gap: 4}, func() {
 		if field.Label != "" {
-			look.Text(field.Label, 12, draw2d.Medium, look.fieldColour(field, focused, scheme.OnSurfaceVariant))
+			look.Text(field.Label, 12, draw2d.Medium, look.fieldColour(field, focused, roles.OnSurfaceVariant))
 			look.Context.Describe(ui.Description{Hidden: true}) // read with the field, which it names
 		}
 		look.fieldBox(field, focused, func() {
 			if field.Prefix != "" {
-				look.Text(field.Prefix, 16, draw2d.Regular, scheme.OnSurfaceVariant)
+				look.Text(field.Prefix, 16, draw2d.Regular, roles.OnSurfaceVariant)
 			}
 			hidden := field.Secret && (field.Reveal == nil || !*field.Reveal)
 			changed = look.Context.TextFieldWith(name, text, ui.TextFieldOptions{Placeholder: field.Placeholder,
@@ -52,7 +52,7 @@ func (look Look) TextField(name string, text *string, field Field) bool {
 			// the label over the box names the field; a screen reader reads it with what is typed
 			look.Context.Describe(ui.Description{Label: field.Label})
 			if field.Suffix != "" {
-				look.Text(field.Suffix, 16, draw2d.Regular, scheme.OnSurfaceVariant)
+				look.Text(field.Suffix, 16, draw2d.Regular, roles.OnSurfaceVariant)
 			}
 			if field.Secret && field.Reveal != nil {
 				icon := map[bool]string{false: "eye", true: "eye-off"}[*field.Reveal]
@@ -82,7 +82,7 @@ func (look Look) fieldColour(field Field, focused bool, otherwise draw2d.Color) 
 // fieldBox draws the box a field is typed in, 56 pixels tall: outlined by a border that thickens
 // while typed in, or filled with a line under it that does.
 func (look Look) fieldBox(field Field, focused bool, content func()) {
-	scheme := look.Roles
+	roles := look.Roles
 	thickness := float32(1)
 	if focused || field.Error != "" {
 		thickness = 2
@@ -93,24 +93,24 @@ func (look Look) fieldBox(field Field, focused bool, content func()) {
 	}
 	row := ui.Layout{Width: ui.Grow(), Height: ui.Grow(), Padding: ui.Padding{Left: 16, Right: right}, Gap: 8, AlignY: ui.Center}
 	if !field.Filled {
-		box := ui.Look{Fill: scheme.Surface, Border: look.fieldColour(field, focused, scheme.Outline), BorderWidth: thickness, Radius: 4}
+		box := ui.Look{Fill: roles.Surface, Border: look.fieldColour(field, focused, roles.Outline), BorderWidth: thickness, Radius: 4}
 		look.Context.Frame(ui.Layout{Width: ui.Grow(), Height: ui.Fixed(56)}, box, func() { look.Context.Box(row, content) })
 		return
 	}
-	box := ui.Look{Fill: scheme.SurfaceContainerHighest, Radius: 4, Clip: true}
+	box := ui.Look{Fill: roles.SurfaceContainerHighest, Radius: 4, Clip: true}
 	look.Context.Frame(ui.Layout{Direction: ui.Vertical, Width: ui.Grow(), Height: ui.Fixed(56)}, box, func() {
 		look.Context.Box(row, content)
 		line := ui.Layout{Width: ui.Grow(), Height: ui.Fixed(thickness)}
-		look.Context.Frame(line, ui.Look{Fill: look.fieldColour(field, focused, scheme.OnSurfaceVariant)}, nil)
+		look.Context.Frame(line, ui.Look{Fill: look.fieldColour(field, focused, roles.OnSurfaceVariant)}, nil)
 	})
 }
 
 // fieldFoot writes the hint or the error under a field, and the count of its characters at the end.
 func (look Look) fieldFoot(field Field, text string) {
-	scheme := look.Roles
-	note, colour := field.Supporting, scheme.OnSurfaceVariant
+	roles := look.Roles
+	note, colour := field.Supporting, roles.OnSurfaceVariant
 	if field.Error != "" {
-		note, colour = field.Error, scheme.Error
+		note, colour = field.Error, roles.Error
 	}
 	counted := field.Counter && field.MaxLength > 0
 	if note == "" && !counted {
@@ -130,11 +130,11 @@ func (look Look) fieldFoot(field Field, text string) {
 
 // SearchBar is a pill to search in, at the top of a screen. It returns true when the text changed.
 func (look Look) SearchBar(name string, text *string, placeholder string) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	changed := false
 	bar := ui.Layout{Width: ui.Grow(), Height: ui.Fixed(56), Padding: ui.Padding{Left: 16, Right: 8}, Gap: 8, AlignY: ui.Center}
-	look.Context.Frame(bar, ui.Look{Fill: scheme.SurfaceContainerHigh, Radius: 28}, func() {
-		look.Context.IconSized("search", 24, scheme.OnSurfaceVariant)
+	look.Context.Frame(bar, ui.Look{Fill: roles.SurfaceContainerHigh, Radius: 28}, func() {
+		look.Context.IconSized("search", 24, roles.OnSurfaceVariant)
 		// the pill is the field's box: the field draws none of its own, nor a focus ring inside it
 		changed = look.Context.TextFieldWith(name, text, ui.TextFieldOptions{Placeholder: placeholder, Plain: true})
 		if *text != "" && look.NamedIconButton("x", look.words().Clear) {
@@ -154,12 +154,12 @@ type Dropdown struct {
 // opens the choices under it when touched. It returns true when another one is chosen. name tells
 // dropdowns apart.
 func (look Look) Dropdown(name, label string, choices []string, dropdown *Dropdown) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	changed := false
 	field := Field{Label: label}
 	look.Context.Box(ui.Layout{Direction: ui.Vertical, Width: ui.Grow(), Gap: 4}, func() {
-		look.Text(label, 12, draw2d.Medium, look.fieldColour(field, dropdown.open, scheme.OnSurfaceVariant))
-		box := ui.Look{Fill: scheme.Surface, Border: look.fieldColour(field, dropdown.open, scheme.Outline), BorderWidth: 1, Radius: 4}
+		look.Text(label, 12, draw2d.Medium, look.fieldColour(field, dropdown.open, roles.OnSurfaceVariant))
+		box := ui.Look{Fill: roles.Surface, Border: look.fieldColour(field, dropdown.open, roles.Outline), BorderWidth: 1, Radius: 4}
 		if dropdown.open {
 			box.BorderWidth = 2
 		}
@@ -167,14 +167,14 @@ func (look Look) Dropdown(name, label string, choices []string, dropdown *Dropdo
 		if look.Context.Clickable(name, layout, ui.Looks{Normal: box, Hovered: box, Pressed: box}, func() {
 			look.Context.Box(ui.Layout{Width: ui.Grow()}, func() {
 				if dropdown.Selected >= 0 && dropdown.Selected < len(choices) {
-					look.Text(choices[dropdown.Selected], 16, draw2d.Regular, scheme.OnSurface)
+					look.Text(choices[dropdown.Selected], 16, draw2d.Regular, roles.OnSurface)
 				}
 			})
-			look.Context.IconSized(map[bool]string{false: "chevron-down", true: "chevron-up"}[dropdown.open], 24, scheme.OnSurfaceVariant)
+			look.Context.IconSized(map[bool]string{false: "chevron-down", true: "chevron-up"}[dropdown.open], 24, roles.OnSurfaceVariant)
 		}) {
 			dropdown.open = !dropdown.open
 		}
-		menu := ui.Look{Fill: scheme.SurfaceContainer, Radius: 4, Shadow: true}
+		menu := ui.Look{Fill: roles.SurfaceContainer, Radius: 4, Shadow: true}
 		look.Context.Popover(name+" choices", &dropdown.open, menu, func() {
 			for index, choice := range choices {
 				if look.dropdownChoice(choice, index == dropdown.Selected) {
@@ -189,16 +189,16 @@ func (look Look) Dropdown(name, label string, choices []string, dropdown *Dropdo
 
 // dropdownChoice is one of a dropdown's choices, 48 pixels tall, the chosen one tinted and ticked.
 func (look Look) dropdownChoice(choice string, chosen bool) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	normal := ui.Look{}
 	if chosen {
-		normal.Fill = scheme.SecondaryContainer
+		normal.Fill = roles.SecondaryContainer
 	}
 	layout := ui.Layout{Width: ui.Grow(), Height: ui.Fixed(48), Padding: ui.PadXY(12, 0), Gap: 12, AlignY: ui.Center}
-	touched := look.Context.Clickable("choice "+choice, layout, pressedOnly(normal, stateLayer(scheme.OnSurface, 0.1)), func() {
-		look.Context.Box(ui.Layout{Width: ui.Grow()}, func() { look.Text(choice, 16, draw2d.Regular, scheme.OnSurface) })
+	touched := look.Context.Clickable("choice "+choice, layout, pressedOnly(normal, stateLayer(roles.OnSurface, 0.1)), func() {
+		look.Context.Box(ui.Layout{Width: ui.Grow()}, func() { look.Text(choice, 16, draw2d.Regular, roles.OnSurface) })
 		if chosen {
-			look.Context.IconSized("check", 20, scheme.OnSurface)
+			look.Context.IconSized("check", 20, roles.OnSurface)
 		}
 	})
 	look.Context.Describe(ui.Description{Selected: chosen})
@@ -220,7 +220,7 @@ func (look Look) SearchView(name, placeholder string, search *Search, content fu
 	if !search.Active {
 		return look.searchPill(name, placeholder, search)
 	}
-	scheme := look.Roles
+	roles := look.Roles
 	insets := look.Context.Insets()
 	changed := false
 	arrived := look.Context.Appear("search "+name, arrivingMotion)
@@ -228,7 +228,7 @@ func (look Look) SearchView(name, placeholder string, search *Search, content fu
 		Leave: ui.Leave{Duration: leavingMotion * 3 / 4}}
 	dismissed := look.Context.Modal(name+" open", options, func() {
 		view := ui.Layout{Direction: ui.Vertical, Width: ui.Grow(), Height: ui.Grow(), Padding: ui.Padding{Top: insets.Top}}
-		look.Context.Frame(view, ui.Look{Fill: scheme.SurfaceContainerHigh}, func() {
+		look.Context.Frame(view, ui.Look{Fill: roles.SurfaceContainerHigh}, func() {
 			bar := ui.Layout{Width: ui.Grow(), Height: ui.Fixed(72), Padding: ui.Padding{Left: 4 + insets.Left, Right: 4 + insets.Right}, Gap: 4, AlignY: ui.Center}
 			look.Context.Box(bar, func() {
 				if look.NamedIconButton("arrow-left", look.words().Back) {
@@ -255,14 +255,14 @@ func (look Look) SearchView(name, placeholder string, search *Search, content fu
 // searchPill is the closed search: a pill like the search bar's, which opens the search when
 // touched.
 func (look Look) searchPill(name, placeholder string, search *Search) bool {
-	scheme := look.Roles
-	pill := ui.Look{Fill: scheme.SurfaceContainerHigh, Radius: 28}
+	roles := look.Roles
+	pill := ui.Look{Fill: roles.SurfaceContainerHigh, Radius: 28}
 	layout := ui.Layout{Width: ui.Grow(), Height: ui.Fixed(56), Padding: ui.Padding{Left: 16, Right: 16}, Gap: 12, AlignY: ui.Center}
-	if look.Context.Clickable(name, layout, pressedOnly(pill, scheme.SurfaceContainerHighest), func() {
-		look.Context.IconSized("search", 24, scheme.OnSurfaceVariant)
-		shown, colour := placeholder, scheme.OnSurfaceVariant
+	if look.Context.Clickable(name, layout, pressedOnly(pill, roles.SurfaceContainerHighest), func() {
+		look.Context.IconSized("search", 24, roles.OnSurfaceVariant)
+		shown, colour := placeholder, roles.OnSurfaceVariant
 		if search.Query != "" {
-			shown, colour = search.Query, scheme.OnSurface
+			shown, colour = search.Query, roles.OnSurface
 		}
 		look.Text(shown, 16, draw2d.Regular, colour)
 	}) {

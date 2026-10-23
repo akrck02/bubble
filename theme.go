@@ -211,5 +211,8 @@ func checkOptions(options Options) error {
 	if options.Density != DensityComfortable && options.Density != DensityCompact {
 		return UnknownDensity
 	}
+	if options.Palettes != nil && (options.Style != StyleMaterial || !options.Palettes.opaque()) {
+		return InvalidPalettes
+	}
 	return nil
 }

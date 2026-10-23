@@ -190,6 +190,8 @@ func TestEachWrongOptionHasItsOwnCode(test *testing.T) {
 		{Options{Style: "glass", Mode: ModeLight, Density: DensityComfortable}, UnknownStyle},
 		{Options{Style: StylePaper, Mode: "dim", Density: DensityComfortable}, UnknownMode},
 		{Options{Style: StylePaper, Mode: ModeLight, Density: "cosy"}, UnknownDensity},
+		{Options{Style: StyleMaterial, Mode: ModeLight, Density: DensityComfortable, Palettes: &Palettes{}}, InvalidPalettes},
+		{Options{Style: StylePaper, Mode: ModeLight, Density: DensityComfortable, Palettes: &validPalettes}, InvalidPalettes},
 	}
 	for _, testCase := range cases {
 		if _, err := NewTheme(testCase.options); !errors.Is(err, testCase.want) {
@@ -274,3 +276,6 @@ func TestMaterialHasMaterialsSizesAndRoboto(test *testing.T) {
 		test.Errorf("material shape or family: %+v %s", theme.Shape, theme.Type.Family)
 	}
 }
+
+// validPalettes are palettes as a phone gives them, from one colour.
+var validPalettes = PalettesFromColor(hex("#2E7D32"))

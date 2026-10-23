@@ -30,5 +30,9 @@ var UnknownStyle = define("bubble.unknown-style", "the style must be paper or ma
 // UnknownMode means the mode is neither light nor dark.
 var UnknownMode = define("bubble.unknown-mode", "the mode must be light or dark")
 
+// InvalidPalettes means a phone's palettes were given outside the material style, which is the
+// only one they colour, or have a shade that is not an opaque colour.
+var InvalidPalettes = define("bubble.invalid-palettes", "palettes colour only the material style, and every shade must be opaque")
+
 // UnknownDensity means the density is neither comfortable nor compact.
 var UnknownDensity = define("bubble.unknown-density", "the density must be comfortable or compact")

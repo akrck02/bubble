@@ -34,7 +34,7 @@ const filmRadius = 16
 // paintFilm draws the film's picture fitted in the area, the play button while it is paused, and
 // how far it has played.
 func (look Look) paintFilm(video *window.Video, area draw2d.Rectangle, drawing *draw2d.List) {
-	scheme := look.Roles
+	roles := look.Roles
 	drawing.Rectangle(area, filmRadius, draw2d.Color{0, 0, 0, 1}, draw2d.Color{}, 0)
 	if picture := video.Picture(); picture != nil {
 		shown := fitted(picture, area)
@@ -47,13 +47,13 @@ func (look Look) paintFilm(video *window.Video, area draw2d.Rectangle, drawing *
 		const button = 56
 		middleX, middleY := area.X+area.Width/2, area.Y+area.Height/2
 		drawing.Rectangle(draw2d.Rectangle{X: middleX - button/2, Y: middleY - button/2, Width: button, Height: button}, button/2,
-			scheme.PrimaryContainer, draw2d.Color{}, 0)
-		drawing.Icon("play", middleX-12, middleY-12, 24, scheme.OnPrimaryContainer)
+			roles.PrimaryContainer, draw2d.Color{}, 0)
+		drawing.Icon("play", middleX-12, middleY-12, 24, roles.OnPrimaryContainer)
 	}
 	if duration := video.Duration(); duration > 0 {
 		played := min(float32(video.Position())/float32(duration), 1)
 		line := draw2d.Rectangle{X: area.X + filmRadius, Y: area.Bottom() - 8, Width: (area.Width - 2*filmRadius) * played, Height: 3}
-		drawing.Rectangle(line, 1.5, scheme.Primary, draw2d.Color{}, 0)
+		drawing.Rectangle(line, 1.5, roles.Primary, draw2d.Color{}, 0)
 	}
 }
 

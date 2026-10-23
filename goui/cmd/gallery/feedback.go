@@ -18,7 +18,7 @@ type feedbackState struct {
 // draw shows what tells the person something is happening: loading indicators and progress,
 // skeletons, and what goes over the screen (dialogs, sheets, notes and notifications).
 func (feedback *feedbackState) draw(program *gallery, look material.Look) {
-	context, scheme := look.Context, look.Roles
+	context, roles := look.Context, look.Roles
 	overlays := &program.overlays
 	program.largeTopBar(look, "Feedback", "Loading, progress, dialogs and notes", "feedback")
 	page(context, "feedback", func() {
@@ -70,7 +70,7 @@ func (feedback *feedbackState) draw(program *gallery, look material.Look) {
 				overlays.notify()
 			}
 		})
-		look.Paragraph("Notifications show in the phone's shade, even with the gallery in the background.", 14, draw2d.Regular, scheme.OnSurfaceVariant)
+		look.Paragraph("Notifications show in the phone's shade, even with the gallery in the background.", 14, draw2d.Regular, roles.OnSurfaceVariant)
 	})
 }
 

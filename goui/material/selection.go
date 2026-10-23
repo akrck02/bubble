@@ -6,7 +6,7 @@ import (
 )
 
 // Slider chooses a value between two ends by dragging, in steps (0 for any value): go-ui's slider
-// in the scheme's colours and a finger's size. It returns true when the value changed.
+// in the theme's colours and a finger's size. It returns true when the value changed.
 func (look Look) Slider(name string, value *float32, minimum, maximum, step float32) bool {
 	context := look.Context
 	saved := context.Theme
@@ -21,12 +21,12 @@ func (look Look) Slider(name string, value *float32, minimum, maximum, step floa
 // Switch is Material's switch: a 52 × 32 track whose handle grows and moves to the end when on. It
 // flips the value and returns true when touched.
 func (look Look) Switch(name string, on *bool) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	// the handle slides across and grows as the track fills with colour
 	progress := look.Context.Animate(name, boolFloat(*on), switchMotion)
-	track := ui.Look{Fill: mix(scheme.SurfaceContainerHighest, scheme.Primary, progress),
-		Border: stateLayer(scheme.Outline, 1-progress), BorderWidth: 2, Radius: 16}
-	handle, handleSize := mix(scheme.Outline, scheme.OnPrimary, progress), 16+8*progress
+	track := ui.Look{Fill: mix(roles.SurfaceContainerHighest, roles.Primary, progress),
+		Border: stateLayer(roles.Outline, 1-progress), BorderWidth: 2, Radius: 16}
+	handle, handleSize := mix(roles.Outline, roles.OnPrimary, progress), 16+8*progress
 	travel := 52 - 8 - handleSize
 	layout := ui.Layout{Width: ui.Fixed(52), Height: ui.Fixed(32), Padding: ui.Padding{Left: 4 + travel*progress, Right: 4},
 		AlignX: ui.Start, AlignY: ui.Center}
@@ -45,16 +45,16 @@ func (look Look) Switch(name string, on *bool) bool {
 // chosen (a view, a speed, a period). It changes selected and returns true when another is
 // touched. name tells the group apart from another one on the same screen.
 func (look Look) SegmentedButtons(name string, options []string, selected *int) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	changed := false
 	look.Context.Push(name)
 	defer look.Context.Pop()
 	look.Context.Box(ui.Layout{Width: ui.Grow(), Gap: 8}, func() {
 		for index, option := range options {
 			chosen := index == *selected
-			normal, ink := ui.Look{Border: scheme.Outline, BorderWidth: 1, Radius: 20}, scheme.OnSurface
+			normal, ink := ui.Look{Border: roles.Outline, BorderWidth: 1, Radius: 20}, roles.OnSurface
 			if chosen {
-				normal, ink = ui.Look{Fill: scheme.SecondaryContainer, Border: scheme.Outline, BorderWidth: 1, Radius: 20}, scheme.OnSecondaryContainer
+				normal, ink = ui.Look{Fill: roles.SecondaryContainer, Border: roles.Outline, BorderWidth: 1, Radius: 20}, roles.OnSecondaryContainer
 			}
 			layout := ui.Layout{Width: ui.Share(1), Height: ui.Fixed(40), Gap: 6, AlignX: ui.Center, AlignY: ui.Center}
 			touched := look.Context.Clickable(option, layout, pressedOnly(normal, stateLayer(ink, 0.12)), func() {
@@ -75,20 +75,20 @@ func (look Look) SegmentedButtons(name string, options []string, selected *int) 
 // Checkbox is a square that is ticked or not, with a label after it; touching either flips it. It
 // returns true when touched.
 func (look Look) Checkbox(label string, on *bool) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	layout := ui.Layout{Height: ui.Fixed(48), Padding: ui.Padding{Right: 8}, Gap: 4, AlignY: ui.Center}
-	touched := look.Context.Clickable("check "+label, layout, ui.Looks{Pressed: ui.Look{Fill: stateLayer(scheme.OnSurface, 0.08), Radius: 24}}, func() {
+	touched := look.Context.Clickable("check "+label, layout, ui.Looks{Pressed: ui.Look{Fill: stateLayer(roles.OnSurface, 0.08), Radius: 24}}, func() {
 		look.Context.Box(ui.Layout{Width: ui.Fixed(48), Height: ui.Fixed(48), AlignX: ui.Center, AlignY: ui.Center}, func() {
 			box := ui.Layout{Width: ui.Fixed(18), Height: ui.Fixed(18), AlignX: ui.Center, AlignY: ui.Center}
 			if *on {
-				look.Context.Frame(box, ui.Look{Fill: scheme.Primary, Radius: 2}, func() {
-					look.Context.IconSized("check", 14, scheme.OnPrimary)
+				look.Context.Frame(box, ui.Look{Fill: roles.Primary, Radius: 2}, func() {
+					look.Context.IconSized("check", 14, roles.OnPrimary)
 				})
 				return
 			}
-			look.Context.Frame(box, ui.Look{Border: scheme.OnSurfaceVariant, BorderWidth: 2, Radius: 2}, nil)
+			look.Context.Frame(box, ui.Look{Border: roles.OnSurfaceVariant, BorderWidth: 2, Radius: 2}, nil)
 		})
-		look.Text(label, 16, draw2d.Regular, scheme.OnSurface)
+		look.Text(label, 16, draw2d.Regular, roles.OnSurface)
 	})
 	if touched {
 		*on = !*on
@@ -100,14 +100,14 @@ func (look Look) Checkbox(label string, on *bool) bool {
 // RadioButton is one of a few choices of which one is chosen, with a label after it. It returns
 // true when touched; the program then chooses it.
 func (look Look) RadioButton(label string, chosen bool) bool {
-	scheme := look.Roles
+	roles := look.Roles
 	layout := ui.Layout{Height: ui.Fixed(48), Padding: ui.Padding{Right: 8}, Gap: 4, AlignY: ui.Center}
-	touched := look.Context.Clickable("radio "+label, layout, ui.Looks{Pressed: ui.Look{Fill: stateLayer(scheme.OnSurface, 0.08), Radius: 24}}, func() {
+	touched := look.Context.Clickable("radio "+label, layout, ui.Looks{Pressed: ui.Look{Fill: stateLayer(roles.OnSurface, 0.08), Radius: 24}}, func() {
 		look.Context.Box(ui.Layout{Width: ui.Fixed(48), Height: ui.Fixed(48), AlignX: ui.Center, AlignY: ui.Center}, func() {
 			ring := ui.Layout{Width: ui.Fixed(20), Height: ui.Fixed(20), AlignX: ui.Center, AlignY: ui.Center}
-			colour := scheme.OnSurfaceVariant
+			colour := roles.OnSurfaceVariant
 			if chosen {
-				colour = scheme.Primary
+				colour = roles.Primary
 			}
 			look.Context.Frame(ring, ui.Look{Border: colour, BorderWidth: 2, Radius: 10}, func() {
 				if chosen {
@@ -115,7 +115,7 @@ func (look Look) RadioButton(label string, chosen bool) bool {
 				}
 			})
 		})
-		look.Text(label, 16, draw2d.Regular, scheme.OnSurface)
+		look.Text(label, 16, draw2d.Regular, roles.OnSurface)
 	})
 	look.Context.Describe(ui.Description{Role: ui.RadioRole, Checked: chosen})
 	return touched

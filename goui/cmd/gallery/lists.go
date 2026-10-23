@@ -85,7 +85,7 @@ func (lists *listsState) draw(program *gallery, look material.Look) {
 // drawList shows a list that refreshes when pulled, rows swiped away or held to choose them, a
 // banner and rows that open.
 func (lists *listsState) drawList(program *gallery, look material.Look) {
-	context, scheme := look.Context, look.Roles
+	context, roles := look.Context, look.Roles
 	notes := &program.overlays.snackbar
 	choosing := lists.choosing()
 	if choosing {
@@ -125,7 +125,7 @@ func (lists *listsState) drawList(program *gallery, look material.Look) {
 		for _, person := range []string{"Ana Lighthouse-Keeper", "Tom Boatman", "Lena Harbour"} {
 			context.Box(ui.Layout{Width: ui.Grow(), Height: ui.Fixed(56), Padding: ui.PadXY(16, 0), Gap: 16, AlignY: ui.Center}, func() {
 				look.Avatar(person, "", draw2d.Color{}, 40)
-				look.Text(person, 16, draw2d.Regular, scheme.OnSurface)
+				look.Text(person, 16, draw2d.Regular, roles.OnSurface)
 			})
 		}
 		look.SectionTitle("Questions")
@@ -134,7 +134,7 @@ func (lists *listsState) drawList(program *gallery, look material.Look) {
 			"The Old Tower opens on summer weekends."}
 		for index, question := range questions {
 			look.ExpandableItem(fmt.Sprint("question ", index), material.Item{Headline: question}, &lists.answers[index], func() {
-				look.Paragraph(answers[index], 14, draw2d.Regular, scheme.OnSurfaceVariant)
+				look.Paragraph(answers[index], 14, draw2d.Regular, roles.OnSurfaceVariant)
 			})
 		}
 		context.Box(ui.Layout{Width: ui.Grow(), Height: ui.Fixed(96)}, nil)
@@ -206,23 +206,23 @@ func lightsRemoved(count int) string {
 // drawLighthouse shows one lighthouse: its photo, where it is, whether it is lit, and ways to pass
 // it on.
 func (lists *listsState) drawLighthouse(program *gallery, look material.Look, name string) {
-	context, scheme := look.Context, look.Roles
+	context, roles := look.Context, look.Roles
 	index := slices.IndexFunc(lists.lighthouses, func(light lighthouse) bool { return light.name == name })
 	if look.TopAppBar(material.TopBar{Title: name, Back: true}) {
 		lists.navigation.Back()
 	}
 	if index < 0 {
-		look.Paragraph("This lighthouse was taken out of the list.", 16, draw2d.Regular, scheme.OnSurfaceVariant)
+		look.Paragraph("This lighthouse was taken out of the list.", 16, draw2d.Regular, roles.OnSurfaceVariant)
 		return
 	}
 	light := &lists.lighthouses[index]
 	page(context, "light "+name, func() {
 		context.Image(coast()[index%len(coast())], ui.Layout{Width: ui.Grow(), Height: ui.Fixed(220)}, 16)
-		look.Text(light.place, 16, draw2d.Regular, scheme.OnSurfaceVariant)
+		look.Text(light.place, 16, draw2d.Regular, roles.OnSurfaceVariant)
 		look.ListItem("lit", material.Item{Icon: "lightbulb", Headline: "Lit tonight", Supporting: "Its keeper switches it on at sunset",
 			Trailing: func() { look.Switch("lit switch", &light.lit) }})
 		look.Paragraph("Touch the arrow or go back with the phone's back to return to the list; this screen slid in over it, and slides back out.",
-			14, draw2d.Regular, scheme.OnSurfaceVariant)
+			14, draw2d.Regular, roles.OnSurfaceVariant)
 		row(context, func() {
 			if look.FilledButton("share-2", "Share") && !window.Share(light.name, light.name+" — "+light.place) {
 				context.Copy(light.name + " — " + light.place)

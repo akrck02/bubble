@@ -15,7 +15,7 @@ type actionsState struct {
 // draw shows the buttons, from the most to the least important, Material 3 Expressive's split
 // button and button group, and a toolbar and a floating menu over the screen.
 func (actions *actionsState) draw(program *gallery, look material.Look) {
-	context, scheme := look.Context, look.Roles
+	context, roles := look.Context, look.Roles
 	notes := &program.overlays.snackbar
 	program.largeTopBar(look, "Actions", "Buttons, floating buttons and toolbars", "actions")
 	page(context, "actions", func() {
@@ -51,7 +51,7 @@ func (actions *actionsState) draw(program *gallery, look material.Look) {
 		})
 		look.Heading("Over the screen")
 		look.Paragraph("A toolbar floats at the foot for what is done to the content, and the floating button opens into a few actions.",
-			14, draw2d.Regular, scheme.OnSurfaceVariant)
+			14, draw2d.Regular, roles.OnSurfaceVariant)
 	})
 	above := aboveBars(look)
 	tools := []material.Destination{{Icon: "pencil", Label: "Edit"}, {Icon: "share-2", Label: "Share"}, {Icon: "trash-2", Label: "Delete"}}

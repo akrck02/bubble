@@ -44,16 +44,16 @@ func (look Look) Stick(name string, stick *Stick, size float32) {
 
 // stickRing draws the ring and the knob, pushed from the middle as far as the stick is pointed.
 func (look Look) stickRing(name string, stick *Stick, size float32) {
-	scheme := look.Roles
+	roles := look.Roles
 	knob := size * 0.4
 	reach := (size - knob) / 2
 	padding := ui.Padding{Left: reach + stick.Sideways*reach, Top: reach - stick.Forward*reach}
 	layout := ui.Layout{Width: ui.Fixed(size), Height: ui.Fixed(size), Padding: padding}
-	ring := ui.Look{Fill: scheme.Scrim, Border: scheme.OutlineVariant, BorderWidth: 2, Radius: size / 2}
+	ring := ui.Look{Fill: roles.BarScrim, Border: roles.OutlineVariant, BorderWidth: 2, Radius: size / 2}
 	// a clickable, so the interface keeps its finger from what is behind it
 	look.Context.Clickable(name, layout, ui.Looks{Normal: ring, Hovered: ring, Pressed: ring}, func() {
 		knobLayout := ui.Layout{Width: ui.Fixed(knob), Height: ui.Fixed(knob), AlignX: ui.Center, AlignY: ui.Center}
-		look.Context.Frame(knobLayout, ui.Look{Fill: scheme.Primary, Radius: knob / 2, Shadow: true}, nil)
+		look.Context.Frame(knobLayout, ui.Look{Fill: roles.Primary, Radius: knob / 2, Shadow: true}, nil)
 	})
 }
 
