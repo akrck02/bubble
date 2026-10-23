@@ -136,7 +136,7 @@ func (garden *herbarium) list(context *ui.Context) {
 		if !matches(each.name, garden.search) {
 			continue
 		}
-		look := ui.Look{Fill: theme.Surface, Border: theme.Line, BorderWidth: 1, Radius: float32(garden.design.Shape.CardRadius)}
+		look := garden.surface(float32(garden.design.Shape.CardRadius))
 		chosen := look
 		chosen.Fill = theme.Sunken
 		looks := ui.Looks{Normal: look, Hovered: chosen, Pressed: chosen}
@@ -179,14 +179,28 @@ func (garden *herbarium) sheet(context *ui.Context) {
 	})
 }
 
-// pane is Bubble's .pane: a surface with a fine line on paper, a pane of glass on glass.
+// pane is Bubble's .pane: a surface with a fine line on paper, a pane of glass on glass, and on
+// Material a tinted surface that floats.
 func (garden *herbarium) pane(context *ui.Context, layout ui.Layout, content func()) {
 	theme := context.Theme
-	look := ui.Look{Fill: theme.Surface, Border: theme.Line, BorderWidth: 1, Radius: theme.PanelRadius}
-	if garden.ground != nil {
-		look = ui.Look{Fill: theme.Surface, Radius: theme.PanelRadius}
+	context.Frame(layout, garden.surface(theme.PanelRadius), content)
+}
+
+// materialTint is how much accent tint Bubble's CSS mixes into a Material card.
+const materialTint = 0.45
+
+// surface is how Bubble's CSS draws a card or a pane in the theme's style, with the given corners.
+func (garden *herbarium) surface(radius float32) ui.Look {
+	theme, colours := garden.theme, garden.design.Colors
+	switch {
+	case garden.ground != nil:
+		return ui.Look{Fill: theme.Surface, Radius: radius}
+	case garden.design.Options.Style == bubble.StyleMaterial:
+		tinted := colours.Surface.Mix(colours.AccentTint, materialTint)
+		return ui.Look{Fill: draw2d.MustHex(tinted.Hex()), Radius: radius, Shadow: true}
+	default:
+		return ui.Look{Fill: theme.Surface, Border: theme.Line, BorderWidth: 1, Radius: radius}
 	}
-	context.Frame(layout, look, content)
 }
 
 // field writes a field's name over it, as Bubble's .field does.
