@@ -1,9 +1,0 @@
-.round {
-    --radius: 100%;
-    border-radius: var(--radius);
-}
-
-.square{
-    --radius: 0;
-    border-radius: var(--radius);
-}

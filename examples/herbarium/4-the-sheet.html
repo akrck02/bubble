@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Herbarium</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="../../css/bubble.css">
+<style>
+/* The herbarium's own layout: the list and the sheet side by side. */
+.herbarium { display: grid; grid-template-columns: minmax(0, 1fr) 26rem; gap: var(--gap); align-items: start; }
+.herbarium > div { display: grid; gap: var(--gap); }
+.pane { display: grid; gap: var(--gap); }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <a class="brand" href="#"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3" /><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4" /><path d="M5 21h14" /></svg><span>Herbarium</span></a>
+    <nav class="places" aria-label="Places"><a href="#" aria-current="page"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3" /><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4" /><path d="M5 21h14" /></svg><span>Plants</span></a><a href="#"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M8 2v3" /><path d="M16 2v3" /><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /></svg><span>Seasons</span></a><a href="#"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /><circle cx="12" cy="10" r="3" /></svg><span>Beds</span></a></nav>
+  </aside>
+  <main class="page wide">
+    <div class="herbarium">
+      <div>
+        <h1>Plants</h1>
+        <div class="search" role="search">
+          <label class="search-box"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg><input type="search" placeholder="Search the herbarium" aria-label="Search the herbarium"></label>
+        </div>
+        <nav class="chips" aria-label="Seasons"><a class="chip" href="#" aria-current="page">All</a><a class="chip" href="#">Spring</a><a class="chip" href="#">Summer</a><a class="chip" href="#">Autumn</a><a class="chip" href="#">Winter</a></nav>
+        <ul class="list" aria-label="Plants">
+          <li class="list-item"><span class="title">Rosemary</span><span class="quiet">Herb bed</span><span class="pill">Spring</span></li>
+          <li class="list-item"><span class="title">Lavender</span><span class="quiet">South wall</span><span class="pill">Summer</span></li>
+          <li class="list-item"><span class="title">Sunflower</span><span class="quiet">Vegetable patch</span><span class="pill">Summer</span></li>
+          <li class="list-item"><span class="title">Heather</span><span class="quiet">Rockery</span><span class="pill">Autumn</span></li>
+          <li class="list-item"><span class="title">Snowdrop</span><span class="quiet">Under the oak</span><span class="pill">Winter</span></li>
+          <li class="list-item"><span class="title">Hart's-tongue fern</span><span class="quiet">Shady corner</span><span class="pill">All year</span></li>
+        </ul>
+      </div>
+      <section class="pane" aria-labelledby="sheet">
+        <h2 id="sheet">Rosemary</h2>
+        <div class="field"><label for="name">Name</label><input id="name" value="Rosemary"></div>
+        <div class="field"><label for="latin">Latin name</label><input id="latin" value="Salvia rosmarinus"></div>
+        <div class="field"><label for="bed">Where it grows</label><select id="bed"><option>Herb bed</option><option>South wall</option><option>Rockery</option></select></div>
+        <fieldset class="choices"><legend>Flowers in</legend><label class="choice"><input type="radio" name="season" value="Spring" checked>Spring</label><label class="choice"><input type="radio" name="season" value="Summer">Summer</label><label class="choice"><input type="radio" name="season" value="Autumn">Autumn</label><label class="choice"><input type="radio" name="season" value="Winter">Winter</label></fieldset>
+        <div class="dialog-actions"><button class="button danger" type="button"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M10 11v6" /><path d="M14 11v6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg> Remove</button><button class="button" type="button">Cancel</button><button class="button primary" type="button">Save</button></div>
+      </section>
+    </div>
+  </main>
+</div>
+  <button class="fab" type="button" aria-label="New plant"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 12h14" /><path d="M12 5v14" /></svg></button>
+</body>
+</html>
