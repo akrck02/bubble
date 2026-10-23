@@ -97,6 +97,12 @@ func colorProperties(theme Theme) []cssProperty {
 		{"positive", colors.Positive.Hex()}, {"warning", colors.Warning.Hex()}, {"danger", colors.Danger.Hex()},
 		{"focus-ring", colors.FocusRing.Hex()}, {"selection", colors.Selection.Hex()},
 		{"shadow", colors.Shadow.Hex()}, {"scrim", colors.Scrim.Hex()}, {"tile", colors.Tile.Hex()},
+		{"container-low", colors.ContainerLow.Hex()}, {"container", colors.Container.Hex()},
+		{"container-high", colors.ContainerHigh.Hex()}, {"container-highest", colors.ContainerHighest.Hex()},
+		{"on-accent-tint", colors.OnAccentTint.Hex()}, {"accent-container", colors.AccentContainer.Hex()},
+		{"on-accent-container", colors.OnAccentContainer.Hex()}, {"on-danger", colors.OnDanger.Hex()},
+		{"danger-container", colors.DangerContainer.Hex()}, {"on-danger-container", colors.OnDangerContainer.Hex()},
+		{"inverse", colors.Inverse.Hex()}, {"on-inverse", colors.OnInverse.Hex()}, {"inverse-accent", colors.InverseAccent.Hex()},
 		{"color-scheme", string(theme.Options.Mode)},
 	}
 }

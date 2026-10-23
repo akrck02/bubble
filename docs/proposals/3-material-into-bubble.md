@@ -1,6 +1,6 @@
 # 3. Material into Bubble
 
-> Status: proposed · Author's approval: proposal ☐ plan ☐
+> Status: building · Author's approval: proposal ☑ plan ☑ (CSS included)
 
 ## Why
 
@@ -79,8 +79,8 @@ browser.
 
 ## Tasks
 
-- [ ] T1 — Seed maths and Material's scheme in the root package · `material.go`, `palettes.go` · R1 R6 · test: `TestMaterialRolesComeFromTheSeedAsGoUIForAndroidMadeThem`
-- [ ] T2 — The ladder of surfaces in every style, with contrast tests · `theme.go`, `palettes.go`, `accent.go` · R2 · test: `TestInkReadsOnEveryStepOfTheLadder`
+- [x] T1 — Seed maths and Material's scheme in the root package · `material.go`, `palettes.go` · R1 R6 · test: `TestMaterialRolesComeFromTheSeedAsGoUIForAndroidMadeThem`
+- [x] T2 — The ladder of surfaces in every style, with contrast tests · `theme.go`, `palettes.go`, `accent.go` · R2 · test: `TestInkReadsOnEveryStepOfTheLadder`
 - [ ] T3 — Material's shape and type, Roboto in `goui` · `scale.go`, `goui/fonts/` · R3 · test of sizes
 - [ ] T4 — `goui.Theme` maps the ladder and Material's sizes · `goui/theme.go` · R1 R3 · goui tests
 - [ ] T5 — Move `material/` into `bubble/goui/material`, reading a Bubble theme; its tests pass · R4 · moved tests

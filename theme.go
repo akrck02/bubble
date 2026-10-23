@@ -45,6 +45,9 @@ type Options struct {
 	Density Density
 	Accent  Color // the main colour of the project's logo; the theme adjusts it until it reads well
 	Glass   bool  // frosted, translucent panels over the background (paper only)
+	// Palettes, when a phone gave them (Go for Android reads its wallpaper's), make the material
+	// style's colours instead of the accent, as the system's own applications are coloured.
+	Palettes *Palettes
 }
 
 // DefaultOptions is paper, light, comfortable, with the default accent and no glass.
@@ -87,6 +90,21 @@ type Colors struct {
 	Shadow      Color
 	Scrim       Color // over everything behind a sheet or a dialog
 	Tile        Color // the dark tile every voxel logo stands on
+
+	// The ladder of containers, from the lowest surface to the highest: where a card, a navigation
+	// bar, a field and a switch's track sit. Material makes it from its scheme; paper and glass
+	// from their own surface and sunken colours.
+	ContainerLow, Container, ContainerHigh, ContainerHighest Color
+
+	OnAccentTint      Color // text and icons on the accent tint
+	AccentContainer   Color // a stronger wash of the accent: a chosen chip, a floating button
+	OnAccentContainer Color
+	OnDanger          Color // text on a danger fill
+	DangerContainer   Color // a wash of danger: an error banner
+	OnDangerContainer Color
+	Inverse           Color // what stands out against the page: a snackbar
+	OnInverse         Color
+	InverseAccent     Color // the accent on the inverse surface: a snackbar's action
 }
 
 // Shape holds corners, edges and elevation, in layout pixels.
@@ -156,7 +174,7 @@ func NewTheme(options Options) (Theme, error) {
 	}
 	theme := Theme{
 		Options: options,
-		Colors:  withAccent(base, options),
+		Colors:  colorsOf(base, options),
 		Shape:   shapeOf(options.Style, options.Density),
 		Type:    typeOf(options.Density),
 		Space:   spaceOf(options.Density),
@@ -165,8 +183,22 @@ func NewTheme(options Options) (Theme, error) {
 	if glass.Enabled {
 		theme.Glass = glass
 		theme.Colors = soberAccent(theme.Colors, glass, options.Mode)
+		theme.Colors = ladderOf(theme.Colors, options.Mode)
 	}
 	return theme, nil
+}
+
+// colorsOf adds the accent to a style's neutral colours: Material makes every colour from it, as
+// its own tools do; paper moves the accent until it reads, and builds its ladder from its surfaces.
+func colorsOf(base Colors, options Options) Colors {
+	if options.Style == StyleMaterial {
+		palettes := PalettesFromColor(options.Accent)
+		if options.Palettes != nil {
+			palettes = *options.Palettes
+		}
+		return materialColors(base, rolesFromPalettes(palettes, options.Mode))
+	}
+	return ladderOf(withAccent(base, options), options.Mode)
 }
 
 func checkOptions(options Options) error {
