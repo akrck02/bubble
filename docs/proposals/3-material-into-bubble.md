@@ -85,7 +85,7 @@ browser.
 - [x] T4 — `goui.Theme` maps the ladder and Material's sizes · `goui/theme.go` · R1 R3 · goui tests
 - [x] T5 — Move `material/` into `bubble/goui/material`, reading a Bubble theme; its tests pass · R4 · moved tests
 - [x] T6 — The gallery in `bubble/goui/cmd/gallery`, and `compare.sh` against Go UI for Android's · R5 · captures and their difference
-- [ ] T7 — The CSS: the ladder and Material's roles in `tokens.css`, Material's parts in `bubble.css`, if the author wants it now · R7 · CSS tests, showcase pair
+- [x] T7 — The CSS: the ladder and Material's roles in `tokens.css`, Material's parts in `bubble.css`, if the author wants it now · R7 · CSS tests, showcase pair
 - [ ] T8 — Docs: `5-guides/5-material-components.md` with the real API, the tokens reference, the journey · all
 
 ## Result

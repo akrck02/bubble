@@ -263,9 +263,6 @@ func (showcase *screen) card(context *ui.Context, layout ui.Layout, content func
 	context.Frame(layout, showcase.cardLook(context, true), content)
 }
 
-// materialTint is how much accent tint Bubble's CSS mixes into a material card.
-const materialTint = 0.45
-
 func (showcase *screen) cardLook(context *ui.Context, tinted bool) ui.Look {
 	theme, colours := context.Theme, showcase.design.Colors
 	radius := float32(showcase.design.Shape.CardRadius)
@@ -273,8 +270,8 @@ func (showcase *screen) cardLook(context *ui.Context, tinted bool) ui.Look {
 	case showcase.ground != nil:
 		return ui.Look{Fill: theme.Surface, Radius: radius}
 	case showcase.material() && tinted:
-		mixed := colours.Surface.Mix(colours.AccentTint, materialTint)
-		return ui.Look{Fill: draw2d.MustHex(mixed.Hex()), Radius: radius, Shadow: true}
+		// Material's cards sit on the low container, told apart by tone, as css/bubble.css draws them
+		return ui.Look{Fill: draw2d.MustHex(colours.ContainerLow.Hex()), Radius: radius}
 	default:
 		return ui.Look{Fill: theme.Surface, Border: theme.Line, BorderWidth: 1, Radius: radius}
 	}

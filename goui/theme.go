@@ -83,8 +83,9 @@ func Theme(theme bubble.Theme) ui.Theme {
 }
 
 // materialy gives go-ui's own controls Material's look, as Go UI for Android's theme did: the
-// highest container sinks, the selection is the accent's container, and the controls keep go-ui's
-// own buttons, chosen rows and check boxes, which Material's parts replace where it matters.
+// highest container sinks, the selection is the accent's container, buttons have medium labels and
+// no edge, and chosen rows and check boxes are go-ui's own, which Material's parts replace where
+// it matters.
 func materialy(result *ui.Theme, theme bubble.Theme) {
 	colours, base := theme.Colors, ui.LightTheme()
 	if theme.Options.Mode == bubble.ModeDark {
@@ -93,9 +94,8 @@ func materialy(result *ui.Theme, theme bubble.Theme) {
 	result.Sunken, result.Selection = colour(colours.ContainerHighest), colour(colours.AccentContainer)
 	result.InkQuiet = colour(colours.ControlLine)
 	result.LineHeight, result.HeadingLineHeight = base.LineHeight, base.HeadingLineHeight
-	result.ButtonPadding, result.ButtonGap, result.ButtonWeight = base.ButtonPadding, base.ButtonGap, base.ButtonWeight // pills, as Bubble shapes them
+	result.ButtonWeight = draw2d.Medium // Material's labels; pills and room as Bubble shapes them
 	result.PrimaryEdge, result.EdgeWidth = base.PrimaryEdge, base.EdgeWidth
-	result.FlatHeight, result.FlatPadding, result.FlatInk = base.FlatHeight, base.FlatPadding, base.FlatInk
 	result.Chosen, result.ChosenInk, result.ChosenWeight = base.Chosen, base.ChosenInk, base.ChosenWeight
 	result.ItemPadding, result.ItemGap, result.ItemIconInk = base.ItemPadding, base.ItemGap, base.ItemIconInk
 	result.CheckSize, result.CheckRadius, result.CheckBorder, result.CheckMark = base.CheckSize, base.CheckRadius, base.CheckBorder, base.CheckMark

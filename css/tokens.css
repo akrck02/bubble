@@ -192,6 +192,19 @@
   --focus-width: 2px;
   --focus-offset: 0px;
   --elevation: 0 1px 3px var(--shadow), 0 4px 12px var(--shadow);
+  --font: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-monospace: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --text-small: 14px;
+  --text-body: 16px;
+  --text-heading: 22px;
+  --text-title: 32px;
+  --text-display: 45px;
+  --icon-size: 24px;
+  --line-height: 1.5;
+  --gap: 12px;
+  --padding: 16px;
+  --control-height: 48px;
+  --touch-target: 48px;
 }
 
 :root[data-style="material"][data-mode="dark"] {
@@ -311,6 +324,19 @@
   --focus-width: 2px;
   --focus-offset: 0px;
   --elevation: 0 1px 3px var(--shadow), 0 4px 12px var(--shadow);
+  --font: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-monospace: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --text-small: 12px;
+  --text-body: 14px;
+  --text-heading: 16px;
+  --text-title: 22px;
+  --text-display: 32px;
+  --icon-size: 20px;
+  --line-height: 1.4;
+  --gap: 8px;
+  --padding: 12px;
+  --control-height: 36px;
+  --touch-target: 32px;
 }
 
 :root[data-glass] {

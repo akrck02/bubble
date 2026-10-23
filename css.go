@@ -53,10 +53,10 @@ func cssBlocks(accent Color) []cssBlock {
 	return []cssBlock{
 		{selector: ":root", options: options(StylePaper, ModeLight, DensityComfortable), parts: every},
 		{selector: ":root[data-mode=\"dark\"]", darkByMedia: true, options: options(StylePaper, ModeDark, DensityComfortable), parts: colorsOnly},
-		{selector: ":root[data-style=\"material\"]", options: options(StyleMaterial, ModeLight, DensityComfortable), parts: []func(Theme) []cssProperty{colorProperties, shapeProperties}},
+		{selector: ":root[data-style=\"material\"]", options: options(StyleMaterial, ModeLight, DensityComfortable), parts: []func(Theme) []cssProperty{colorProperties, shapeProperties, typeProperties, spaceProperties}},
 		{selector: ":root[data-style=\"material\"][data-mode=\"dark\"]", darkByMedia: true, options: options(StyleMaterial, ModeDark, DensityComfortable), parts: colorsOnly},
 		{selector: ":root[data-density=\"compact\"]", options: options(StylePaper, ModeLight, DensityCompact), parts: compactOnly},
-		{selector: ":root[data-style=\"material\"][data-density=\"compact\"]", options: options(StyleMaterial, ModeLight, DensityCompact), parts: []func(Theme) []cssProperty{shapeProperties}},
+		{selector: ":root[data-style=\"material\"][data-density=\"compact\"]", options: options(StyleMaterial, ModeLight, DensityCompact), parts: compactOnly},
 		// Glass comes last and weighs more, so it wins over the paper it reimagines.
 		{selector: ":root[data-glass]", options: glassy(options(StylePaper, ModeLight, DensityComfortable)), parts: glassParts},
 		{selector: ":root[data-glass][data-mode=\"dark\"]", darkByMedia: true, options: glassy(options(StylePaper, ModeDark, DensityComfortable)), parts: glassParts},

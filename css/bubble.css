@@ -112,6 +112,19 @@ a { color: var(--accent-ink); }
 
 .button.ghost { border-color: transparent; }
 
+/*
+ * A tonal button, for an action repeated in a list or a grid (sell one, add a tag): quieter than
+ * the main one, louder than an outline. On paper and glass it is a sunken fill in ink, so the
+ * accent stays for the main action; Material gives it the tint of its accent, as Android does.
+ */
+.button.tonal {
+  border-color: transparent;
+  background: var(--sunken);
+  color: var(--ink);
+}
+
+.button.tonal:hover { background: color-mix(in srgb, var(--sunken) 80%, var(--ink)); }
+
 .button.icon {
   width: var(--touch-target);
   padding: 0;
@@ -251,7 +264,8 @@ input[type="checkbox"]:disabled { opacity: 0.6; cursor: not-allowed; }
 
 :root[data-style="material"] .card {
   border-color: transparent;
-  background: color-mix(in srgb, var(--accent-tint) 45%, var(--surface));
+  background: var(--container-low);
+  box-shadow: none;
 }
 
 .pill {
@@ -926,6 +940,70 @@ input[type="checkbox"]:disabled { opacity: 0.6; cursor: not-allowed; }
 
 @keyframes dialog-rise {
   from { opacity: 0; transform: translateY(8px); }
+}
+
+/* Material ------------------------------------------------------------------------------------ */
+
+/*
+ * Material 3 as Go UI for Android drew it, and as bubble/goui/material draws it in Go: surfaces
+ * told apart by their tone on a ladder of containers, filled fields with a line under them, labels
+ * of a medium weight, the main button flat with no edge under it, the tonal button in the accent's
+ * tint. Only with data-style="material" on <html>.
+ */
+:root[data-style="material"] :is(.pane, .sidebar) {
+  border-color: transparent;
+  background: var(--container-low);
+  box-shadow: none;
+}
+
+:root[data-style="material"] .button { font-weight: 500; }
+:root[data-style="material"] .button:not(.primary, .tonal, .ghost) { color: var(--accent-ink); }
+
+:root[data-style="material"] .button.primary,
+:root[data-style="material"] .button.primary:active {
+  box-shadow: none;
+  transform: none;
+}
+
+:root[data-style="material"] .button.primary:active { filter: brightness(0.92); }
+
+:root[data-style="material"] .button.tonal {
+  background: var(--accent-tint);
+  color: var(--on-accent-tint);
+}
+
+:root[data-style="material"] .button.tonal:hover { background: color-mix(in srgb, var(--accent-tint) 88%, var(--on-accent-tint)); }
+
+/* A filled field: the highest container, square at the bottom, with its line under it. */
+:root[data-style="material"] .field :is(input, textarea, select),
+:root[data-style="material"] .search-box {
+  border: 0;
+  border-bottom: var(--line-width) solid var(--control-line);
+  border-radius: 4px 4px 0 0;
+  background: var(--container-highest);
+  color: var(--ink);
+}
+
+:root[data-style="material"] .search-box { border-radius: var(--floating-radius); border-bottom: 0; }
+
+:root[data-style="material"] .field :is(input, textarea, select):focus-visible {
+  border-bottom: 2px solid var(--focus-ring);
+  outline: none;
+}
+
+:root[data-style="material"] .chip { border-radius: 8px; }
+
+:root[data-style="material"] .chip[aria-pressed="true"],
+:root[data-style="material"] .chip[aria-current="page"] {
+  background: var(--accent-tint);
+  color: var(--on-accent-tint);
+}
+
+:root[data-style="material"] .segmented .button[aria-current="page"],
+:root[data-style="material"] .segmented .button[aria-pressed="true"],
+:root[data-style="material"] .segmented label:has(:checked) {
+  background: var(--accent-tint);
+  color: var(--on-accent-tint);
 }
 
 /* Glass --------------------------------------------------------------------------------------- */
