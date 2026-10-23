@@ -87,4 +87,4 @@ func glassy(result *ui.Theme, theme bubble.Theme) {
 	result.BackdropBlur = float32(glass.Blur) // frosted, as CSS's backdrop-filter: blur()
 }
 
-func colour(value bubble.Color) draw2d.Color { return draw2d.Hex(value.Hex()) }
+func colour(value bubble.Color) draw2d.Color { return draw2d.MustHex(value.Hex()) }

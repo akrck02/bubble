@@ -8,8 +8,8 @@ in a go-ui window.
 `goui` is a module of its own (`goui/go.mod`): Bubble's package stays free of go-ui, so making CSS
 needs nothing of it, and go-ui knows nothing of Bubble.
 
-> **Status:** in development, like Bubble 4 itself. `goui` needs go-ui and go-renderer v0.1.0
-> (their `main`) cloned next to Bubble, since go-ui still reaches go-renderer through a local copy.
+> **Status:** in development, like Bubble 4 itself. `goui` needs go-ui and go-renderer on their
+> `main` cloned next to Bubble, since go-ui still reaches go-renderer through a local copy.
 
 ## The shortest way
 

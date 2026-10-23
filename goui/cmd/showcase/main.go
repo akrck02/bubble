@@ -62,9 +62,11 @@ func main() {
 	flag.Parse()
 
 	if *font != "" {
-		if err := useFont(*font); err != nil {
+		fonts, err := readFonts(*font)
+		if err != nil {
 			fail(err)
 		}
+		options.Fonts = fonts
 	}
 	showcase, err := newScreen(*style, *accent, *glass, options)
 	if err != nil {
@@ -83,19 +85,18 @@ func fail(err error) {
 	os.Exit(1)
 }
 
-// useFont writes text in a face of the system's, such as the one a browser picks for system-ui,
-// so a comparison with web.html is never just about the typeface.
-func useFont(path string) error {
+// readFonts reads a face of the system's, such as the one a browser picks for system-ui, and its
+// bold beside it, so a comparison with web.html is never just about the typeface.
+func readFonts(path string) (overlay.Fonts, error) {
 	regular, err := os.ReadFile(path)
 	if err != nil {
-		return err
+		return overlay.Fonts{}, err
 	}
 	bold, err := os.ReadFile(path[:len(path)-len(".ttf")] + "-Bold.ttf")
 	if err != nil {
-		return err
+		return overlay.Fonts{}, err
 	}
-	overlay.UseFonts(overlay.Fonts{Regular: regular, Medium: bold, Bold: bold})
-	return nil
+	return overlay.Fonts{Regular: regular, Medium: bold, Bold: bold}, nil
 }
 
 func newScreen(style, accent string, glass bool, options window.Options) (*screen, error) {
@@ -273,7 +274,7 @@ func (showcase *screen) cardLook(context *ui.Context, tinted bool) ui.Look {
 		return ui.Look{Fill: theme.Surface, Radius: radius}
 	case showcase.material() && tinted:
 		mixed := colours.Surface.Mix(colours.AccentTint, materialTint)
-		return ui.Look{Fill: draw2d.Hex(mixed.Hex()), Radius: radius, Shadow: true}
+		return ui.Look{Fill: draw2d.MustHex(mixed.Hex()), Radius: radius, Shadow: true}
 	default:
 		return ui.Look{Fill: theme.Surface, Border: theme.Line, BorderWidth: 1, Radius: radius}
 	}
@@ -287,7 +288,7 @@ func (showcase *screen) swatches(context *ui.Context) {
 			name  string
 			color draw2d.Color
 		}{
-			{"Accent", theme.Primary}, {"Ink", theme.Ink}, {"Soft ink", theme.InkSoft}, {"Surface", draw2d.Hex(colours.Surface.Hex())},
+			{"Accent", theme.Primary}, {"Ink", theme.Ink}, {"Soft ink", theme.InkSoft}, {"Surface", draw2d.MustHex(colours.Surface.Hex())},
 			{"Sunken", theme.Sunken}, {"Positive", theme.Positive}, {"Danger", theme.Danger},
 		} {
 			context.Frame(ui.Layout{Direction: ui.Vertical, Width: ui.Grow(), Padding: ui.Pad(12), Gap: 8}, showcase.cardLook(context, false), func() {
