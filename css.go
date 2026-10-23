@@ -3,6 +3,8 @@ package bubble
 import (
 	"fmt"
 	"io"
+	"math"
+	"strconv"
 	"strings"
 )
 
@@ -99,8 +101,9 @@ func colorProperties(theme Theme) []cssProperty {
 	}
 }
 
+// pixels writes a size in CSS pixels, rounded to hundredths: 12 × 0.6 is 7.2px, not 7.199999999999999px.
 func pixels(value float64) string {
-	return fmt.Sprintf("%gpx", value)
+	return strconv.FormatFloat(math.Round(value*100)/100, 'f', -1, 64) + "px"
 }
 
 func shapeProperties(theme Theme) []cssProperty {

@@ -199,7 +199,7 @@
 :root[data-density="compact"] {
   --control-radius: 6px;
   --button-radius: 6px;
-  --card-radius: 7.199999999999999px;
+  --card-radius: 7.2px;
   --panel-radius: 9.6px;
   --floating-radius: 999px;
   --line-width: 1px;
@@ -223,7 +223,7 @@
 }
 
 :root[data-style="material"][data-density="compact"] {
-  --control-radius: 7.199999999999999px;
+  --control-radius: 7.2px;
   --button-radius: 999px;
   --card-radius: 12px;
   --panel-radius: 16.8px;

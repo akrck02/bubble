@@ -185,3 +185,10 @@ func TestAFieldLightsItsOwnEdgeWhenWrittenIn(test *testing.T) {
 func paintsNothing(value string) bool {
 	return value == "transparent" || value == "none" || strings.HasPrefix(value, "var(--wallpaper")
 }
+
+func TestPixelSizesAreWrittenWithAtMostTwoDecimals(test *testing.T) {
+	corner, compact := 12.0, 0.6 // variables, so the product is the float's, not the exact constant's
+	if written := pixels(corner * compact); written != "7.2px" {
+		test.Errorf("a compact card's corner is written %s, want 7.2px", written)
+	}
+}
