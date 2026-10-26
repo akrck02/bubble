@@ -78,7 +78,7 @@ type Colors struct {
 	ControlLine Color // borders of fields and secondary buttons: strong enough to see the control
 	Accent      Color // the main action's fill
 	OnAccent    Color // text and icons on the accent
-	AccentEdge  Color // the block edge under a primary button: the logo's darker side, ×0.70
+	AccentEdge  Color // the logo's darker side, ×0.70: the edge of a checked box and of a raised button
 	AccentSide  Color // the logo's lighter side, ×0.85, for pressed states
 	AccentInk   Color // accent-coloured text and icons on the background
 	AccentTint  Color // a wash of the accent: the selected item, a checkpoint, a Material container
@@ -115,7 +115,7 @@ type Shape struct {
 	PanelRadius    float64 // windows, sheets, dialogs
 	FloatingRadius float64 // the floating action button
 	LineWidth      float64
-	EdgeWidth      float64 // the block edge under primary buttons; 0 when the style has none
+	EdgeWidth      float64 // a block edge under the main button; 0 in every style today, which draws it flat
 	FocusWidth     float64
 	FocusOffset    float64 // the gap between a control and its focus ring; 0, so the edge lights up, kept for go-ui
 	Elevated       bool    // whether raised things cast a shadow (material) or sit on a line (paper)

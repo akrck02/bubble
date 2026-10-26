@@ -17,7 +17,7 @@ This page is made by `docs/6-reference/generate.py` from the code; do not edit i
 | `--control-line` | `Colors.ControlLine` | `#8C8578` | `#6E7480` | `#6D7887` | `#8792A1` | borders of fields and secondary buttons: strong enough to see the control |
 | `--accent` | `Colors.Accent` | `#2C5C9E` | `#5B80B3` | `#305F9F` | `#A3C9FF` | the main action's fill |
 | `--on-accent` | `Colors.OnAccent` | `#FFFFFF` | `#0E1116` | `#FFFFFF` | `#002E68` | text and icons on the accent |
-| `--accent-edge` | `Colors.AccentEdge` | `#1F406F` | `#405A7D` | `#305F9F` | `#A3C9FF` | the block edge under a primary button: the logo's darker side, ×0.70 |
+| `--accent-edge` | `Colors.AccentEdge` | `#1F406F` | `#405A7D` | `#305F9F` | `#A3C9FF` | the logo's darker side, ×0.70: the edge of a checked box and of a raised button |
 | `--accent-side` | `Colors.AccentSide` | `#254E86` | `#4D6D98` | `#4972AB` | `#8FB6ED` | the logo's lighter side, ×0.85, for pressed states |
 | `--accent-ink` | `Colors.AccentInk` | `#2C5C9E` | `#7F9CC4` | `#305F9F` | `#A3C9FF` | accent-coloured text and icons on the background |
 | `--accent-tint` | `Colors.AccentTint` | `#D2D9E1` | `#20334F` | `#D1E4FF` | `#354862` | a wash of the accent: the selected item, a checkpoint, a Material container |
@@ -54,7 +54,7 @@ This page is made by `docs/6-reference/generate.py` from the code; do not edit i
 | `--panel-radius` | `Shape.PanelRadius` | `16px` | `9.6px` | `28px` | windows, sheets, dialogs |
 | `--floating-radius` | `Shape.FloatingRadius` | `999px` | `999px` | `16px` | the floating action button |
 | `--line-width` | `Shape.LineWidth` | `1px` | `1px` | `1px` | lines and borders |
-| `--edge-width` | `Shape.EdgeWidth` | `2px` | `2px` | `0px` | the block edge under primary buttons; 0 when the style has none |
+| `--edge-width` | `Shape.EdgeWidth` | `0px` | `0px` | `0px` | a block edge under the main button; 0 in every style today, which draws it flat |
 | `--focus-width` | `Shape.FocusWidth` | `2px` | `2px` | `2px` | the focus ring's thickness |
 | `--focus-offset` | `Shape.FocusOffset` | `0px` | `0px` | `0px` | the gap between a control and its focus ring; 0, so the edge lights up, kept for go-ui |
 | `--elevation` |  | `none` | `none` | `0 1px 3px var(--shadow), 0 4px 12px var(--shadow)` | the shadow of raised things: none on paper, two soft shadows on material |

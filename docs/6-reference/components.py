@@ -17,8 +17,9 @@ PARTS = [
 <button class="button ghost" type="button">More</button>
 <button class="button danger" type="button">Remove</button>
 <button class="button ghost icon" type="button" aria-label="Add">""" + PLUS + """</button>
-""", ["`.primary` stands on its darker edge, and sinks onto it when pressed.",
-      "`.tonal` is for an action repeated in a list: a sunken fill in ink, the accent's tint in Material.",
+""", ["`.primary` is a flat fill of the accent; labels are of a medium weight.",
+      "A plain button is outlined in the cards' soft line, which darkens under the pointer and in focus.",
+      "`.tonal` is for an action repeated in a list or a grid: the accent's pale tint, in the accent's ink, with no line. Material uses its own container.",
       "`.ghost` has no border; `.icon` is square, a finger wide, and needs an `aria-label`.",
       "`.danger` is for actions that lose something. It is never filled."]),
     ("fields", "Fields", "A label over its control: inputs, text areas and selects.", """
@@ -42,7 +43,7 @@ PARTS = [
 <label><input type="checkbox"> Watered</label>
 <label><input type="radio" name="light" checked> Sun</label>
 <label><input type="radio" name="light"> Shade</label>
-""", ["Checked, they wear the accent with its darker edge, as the primary button does."]),
+""", ["Checked, they wear the accent with its darker edge, the logo's darker side."]),
     ("choices", "Choices", "One choice of a few, or several, as pills in a named group.", """
 <fieldset class="choices">
   <legend>Flowers in</legend>

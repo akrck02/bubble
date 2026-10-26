@@ -31,7 +31,7 @@ func TestEveryBubbleColourLandsOnTheGoUITokenOfTheSameRole(t *testing.T) {
 		{"background", result.Background, colours.Background}, {"surface", result.Surface, colours.Surface},
 		{"sunken", result.Sunken, colours.Sunken}, {"ink", result.Ink, colours.Ink}, {"soft ink", result.InkSoft, colours.InkSoft},
 		{"quiet ink", result.InkQuiet, colours.InkQuiet}, {"line", result.Line, colours.Line},
-		{"control line", result.ControlLine, colours.ControlLine}, {"accent", result.Primary, colours.Accent},
+		{"control line, on fields", result.FieldLine, colours.ControlLine}, {"accent", result.Primary, colours.Accent},
 		{"text on the accent", result.OnPrimary, colours.OnAccent}, {"focus ring", result.FocusRing, colours.FocusRing},
 		{"danger", result.Danger, colours.Danger}, {"main button's edge", result.PrimaryEdge, colours.AccentEdge},
 	} {
@@ -127,5 +127,26 @@ func TestAMaterialThemeIsTheOneGoUIForAndroidGaveGoUI(t *testing.T) {
 	}
 	if result.ControlHeight != 48 || result.TextSize != 16 || result.ControlRadius != 20 || result.PanelRadius != 16 || result.EdgeWidth != 0 {
 		t.Errorf("sizes: height %v, text %v, corners %v and %v, edge %v", result.ControlHeight, result.TextSize, result.ControlRadius, result.PanelRadius, result.EdgeWidth)
+	}
+}
+
+// MUSA's proposal 2 (quieter buttons): on paper the main button is a flat fill, labels are of a
+// medium weight, and an outline is drawn in the cards' soft line while fields keep the stronger one.
+func TestPaperButtonsAreQuiet(t *testing.T) {
+	for _, mode := range []bubble.Mode{bubble.ModeLight, bubble.ModeDark} {
+		theme := themeFor(t, bubble.StylePaper, mode, false)
+		result, colours := Theme(theme), theme.Colors
+		if result.ButtonWeight != draw2d.Medium {
+			t.Errorf("%s: button labels %v, want medium", mode, result.ButtonWeight)
+		}
+		if result.EdgeWidth != 0 {
+			t.Errorf("%s: the main button stands on a %v-pixel edge, want none", mode, result.EdgeWidth)
+		}
+		if result.ControlLine != colour(colours.Line) {
+			t.Errorf("%s: an outline in %v, want the cards' line %s", mode, result.ControlLine, colours.Line.Hex())
+		}
+		if result.FieldLine != colour(colours.ControlLine) || result.CheckLine != colour(colours.ControlLine) {
+			t.Errorf("%s: fields %v and check boxes %v, want the control line %s", mode, result.FieldLine, result.CheckLine, colours.ControlLine.Hex())
+		}
 	}
 }

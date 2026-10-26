@@ -43,7 +43,7 @@
   --panel-radius: 16px;
   --floating-radius: 999px;
   --line-width: 1px;
-  --edge-width: 2px;
+  --edge-width: 0px;
   --focus-width: 2px;
   --focus-offset: 0px;
   --elevation: none;
@@ -294,7 +294,7 @@
   --panel-radius: 9.6px;
   --floating-radius: 999px;
   --line-width: 1px;
-  --edge-width: 2px;
+  --edge-width: 0px;
   --focus-width: 2px;
   --focus-offset: 0px;
   --elevation: none;

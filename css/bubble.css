@@ -69,28 +69,30 @@ a { color: var(--accent-ink); }
   gap: 8px;
   min-height: var(--touch-target);
   padding: 0 calc(var(--padding) * 0.9);
-  border: var(--line-width) solid var(--control-line);
+  border: var(--line-width) solid var(--line);
   border-radius: var(--button-radius);
   background: transparent;
   color: var(--ink);
   font: inherit;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
   cursor: pointer;
   transition: background var(--motion-fast), transform var(--motion-fast);
 }
 
-.button:hover { background: var(--sunken); }
+/* An outline is the cards' soft line at rest; under the pointer and in focus it is a control's. */
+.button:hover { background: var(--sunken); border-color: var(--control-line); }
+.button:focus-visible { border-color: var(--control-line); }
 
 /* Pressing gives a little (after Bubble 3); nothing moves on hover. */
 .button:active { transform: scale(0.97); }
 
-/* The primary action stands on its block edge, the darker side of the project's logo. */
+/* The primary action is a flat fill of the accent: its colour alone marks it. */
 .button.primary {
   border-color: transparent;
   background: var(--accent);
   color: var(--on-accent);
-  box-shadow: 0 var(--edge-width) 0 var(--accent-edge), var(--elevation);
+  box-shadow: var(--elevation);
 }
 
 .button.primary:hover { background: var(--accent-side); }
@@ -105,25 +107,21 @@ a { color: var(--accent-ink); }
   outline-offset: calc(var(--focus-width) * -2);
 }
 
-.button.primary:active {
-  transform: translateY(var(--edge-width)) scale(0.97);
-  box-shadow: 0 0 0 var(--accent-edge);
-}
-
 .button.ghost { border-color: transparent; }
 
 /*
  * A tonal button, for an action repeated in a list or a grid (sell one, add a tag): quieter than
- * the main one, louder than an outline. On paper and glass it is a sunken fill in ink, so the
- * accent stays for the main action; Material gives it the tint of its accent, as Android does.
+ * the main one, louder than an outline. It is the accent's pale tint, labelled in the accent's ink,
+ * with no line; Material gives it its own container, as Android does.
  */
 .button.tonal {
   border-color: transparent;
-  background: var(--sunken);
-  color: var(--ink);
+  background: var(--accent-tint);
+  color: var(--accent-ink);
 }
 
-.button.tonal:hover { background: color-mix(in srgb, var(--sunken) 80%, var(--ink)); }
+.button.tonal:hover { background: color-mix(in srgb, var(--accent-tint) 85%, var(--accent-ink)); }
+.button.tonal:active { background: color-mix(in srgb, var(--accent-tint) 70%, var(--accent-ink)); }
 
 .button.icon {
   width: var(--touch-target);
@@ -983,6 +981,7 @@ input[type="checkbox"]:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
 :root[data-style="material"] .button.tonal:hover { background: color-mix(in srgb, var(--accent-tint) 88%, var(--on-accent-tint)); }
+:root[data-style="material"] .button.tonal:active { background: color-mix(in srgb, var(--accent-tint) 76%, var(--on-accent-tint)); }
 
 /* A filled field: the highest container, square at the bottom, with its line under it. */
 :root[data-style="material"] .field :is(input, textarea, select),

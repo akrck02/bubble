@@ -130,7 +130,7 @@ type Colors struct {
 	ControlLine Color // borders of fields and secondary buttons: strong enough to see the control
 	Accent      Color // the main action's fill
 	OnAccent    Color // text and icons on the accent
-	AccentEdge  Color // the block edge under a primary button: the logo's darker side, ×0.70
+	AccentEdge  Color // the logo's darker side, ×0.70: the edge of a checked box and of a raised button
 	AccentSide  Color // the logo's lighter side, ×0.85, for pressed states
 	AccentInk   Color // accent-coloured text and icons on the background
 	AccentTint  Color // a wash of the accent: the selected item, a checkpoint, a Material container
@@ -235,7 +235,7 @@ type Shape struct {
 	PanelRadius    float64 // windows, sheets, dialogs
 	FloatingRadius float64 // the floating action button
 	LineWidth      float64
-	EdgeWidth      float64 // the block edge under primary buttons; 0 when the style has none
+	EdgeWidth      float64 // a block edge under the main button; 0 in every style today, which draws it flat
 	FocusWidth     float64
 	FocusOffset    float64 // the gap between a control and its focus ring; 0, so the edge lights up, kept for go-ui
 	Elevated       bool    // whether raised things cast a shadow (material) or sit on a line (paper)
@@ -325,9 +325,37 @@ func Roboto() overlay.Fonts
 func Theme(theme bubble.Theme) ui.Theme
     Theme turns a Bubble theme into go-ui's. The colours carry the same names,
     mostly; the sizes come from Bubble's density. What is chosen is brighter
-    and heavier, never coloured, and the main button stands on its darker edge.
-    On glass, panels and wells are the translucent panes, and the window's
-    background is glass's ground (paint it with Ground).
+    and heavier, never coloured. Buttons are quiet: medium labels, a flat
+    main button, and an outline in the cards' soft line that darkens under the
+    pointer, while fields and check boxes keep a control's line. On glass,
+    panels and wells are the translucent panes, and the window's background is
+    glass's ground (paint it with Ground).
+
+func TonalButton(context *ui.Context, theme bubble.Theme, label string) bool
+    TonalButton is a button for an action repeated in a list or a grid (sell
+    one, add a tag): quieter than the main button and louder than an outline,
+    with no line. It is a finger tall and reports a click like go-ui's buttons.
+    Its label follows go-ui's: "Sell one##3" shows "Sell one" and tells the
+    third row's button from the others.
+
+func TonalIconButton(context *ui.Context, theme bubble.Theme, icon, label string) bool
+    TonalIconButton is TonalButton with an icon (a Lucide name) before its
+    label. A label with no shown words, "##Add a tag", gives a square with the
+    icon alone, read aloud by the hidden name.
+
+
+TYPES
+
+type Tonal struct {
+	Fill, Ink draw2d.Color
+}
+    Tonal is how a tonal button is drawn: its fill and the ink of its label and
+    icon.
+
+func TonalLook(theme bubble.Theme) Tonal
+    TonalLook is the tonal button of a Bubble theme: the accent's pale tint
+    with its label in the accent's ink, as Bubble's CSS draws .button.tonal.
+    Material gives it its own container.
 ```
 
 ## Package goui/material

@@ -167,8 +167,24 @@ func TestTheEdgeIsTheLogosDarkerSide(test *testing.T) {
 	if theme.Colors.AccentEdge != theme.Colors.Accent.Shade(0.70) {
 		test.Errorf("edge %s, want the accent %s ×0.70", theme.Colors.AccentEdge.Hex(), theme.Colors.Accent.Hex())
 	}
-	if theme.Shape.EdgeWidth == 0 {
-		test.Error("paper has no block edge")
+}
+
+// MUSA's proposal 2: paper's main button is a flat fill, and the tonal button's label reads on
+// its tint, by day and at night.
+func TestPapersButtonsAreFlatAndTheTonalOneReads(test *testing.T) {
+	for _, mode := range []Mode{ModeLight, ModeDark} {
+		options := DefaultOptions()
+		options.Mode = mode
+		theme, err := NewTheme(options)
+		if err != nil {
+			test.Fatal(err)
+		}
+		if theme.Shape.EdgeWidth != 0 {
+			test.Errorf("%s: the main button stands on a %v-pixel edge, want none", mode, theme.Shape.EdgeWidth)
+		}
+		if contrast := Contrast(theme.Colors.AccentInk, theme.Colors.AccentTint); contrast < textContrast {
+			test.Errorf("%s: a tonal label reads at %.2f:1, needs %v", mode, contrast, textContrast)
+		}
 	}
 }
 

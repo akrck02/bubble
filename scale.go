@@ -11,7 +11,8 @@ func shapeOf(style Style, density Density) Shape {
 	if style == StylePaper {
 		// Paper is cut, not moulded: buttons share the fields' medium corners, like cards on a desk.
 		shape.ControlRadius, shape.ButtonRadius, shape.CardRadius, shape.PanelRadius, shape.FloatingRadius = 10, 10, 12, 16, pill
-		shape.EdgeWidth = 2
+		// Its main button is a flat fill: the accent alone marks it (MUSA's proposal 2, after it
+		// stood on a darker edge).
 	} else {
 		// Material's own corners, as Go UI for Android drew them: rounded fields, pill buttons,
 		// 12-pixel cards, 28-pixel dialogs and sheets, a 16-pixel floating button.

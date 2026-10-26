@@ -30,8 +30,20 @@ if err != nil {
 context.Theme = goui.Theme(theme) // before the first control of the frame
 ```
 
-Buttons, lists, fields and check boxes now follow Bubble: the main button on its edge, what is
-chosen brighter and never coloured, Bubble's line heights and drawn check box.
+Buttons, lists, fields and check boxes now follow Bubble: quiet buttons with medium labels, a flat
+main button, outlines in the cards' soft line, what is chosen brighter and never coloured, Bubble's
+line heights and drawn check box.
+
+go-ui has no tonal button, so `goui` adds one, for an action repeated in a list or a grid:
+
+```go
+if goui.TonalButton(context, theme, "Sell one") {
+	sold++
+}
+goui.TonalIconButton(context, theme, "plus", "##Add a tag") // the icon alone, read as «Add a tag»
+```
+
+It is the accent's pale tint with its label in the accent's ink, as tall as a finger.
 
 The focus follows Bubble too. It shows only when the keyboard brought it, as a ring on the
 control's edge with no gap: inside the main button, in the colour of its text. A field lights its

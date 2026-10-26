@@ -220,3 +220,24 @@ func TestADangerousButtonKeepsItsRedInEveryStyle(test *testing.T) {
 		}
 	}
 }
+
+// MUSA's proposal 2: a button's outline is the cards' soft line at rest and a control's under the
+// pointer and in focus; on paper the main button stands on no edge.
+func TestAButtonsOutlineIsSoftUntilPointedAt(test *testing.T) {
+	declared := map[string]string{}
+	for _, rule := range cssRules(test) {
+		for _, selector := range rule.selectors {
+			declared[selector] += rule.declarations
+		}
+	}
+	for selector, wanted := range map[string]string{
+		".button": "solid var(--line)", ".button:hover": "var(--control-line)", ".button:focus-visible": "var(--control-line)",
+	} {
+		if !strings.Contains(declared[selector], wanted) {
+			test.Errorf("%s does not declare %s", selector, wanted)
+		}
+	}
+	if strings.Contains(declared[".button.primary"], "accent-edge") {
+		test.Error(".button.primary still stands on the accent's edge")
+	}
+}

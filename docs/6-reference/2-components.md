@@ -17,8 +17,9 @@ Actions. A screen has one primary button, its main action.
 
 ![Buttons](../images/components/buttons.png)
 
-- `.primary` stands on its darker edge, and sinks onto it when pressed.
-- `.tonal` is for an action repeated in a list: a sunken fill in ink, the accent's tint in Material.
+- `.primary` is a flat fill of the accent; labels are of a medium weight.
+- A plain button is outlined in the cards' soft line, which darkens under the pointer and in focus.
+- `.tonal` is for an action repeated in a list or a grid: the accent's pale tint, in the accent's ink, with no line. Material uses its own container.
 - `.ghost` has no border; `.icon` is square, a finger wide, and needs an `aria-label`.
 - `.danger` is for actions that lose something. It is never filled.
 
@@ -60,7 +61,7 @@ Plain `<input>`s, drawn by Bubble at a size a finger can hit.
 
 ![Check boxes and radio buttons](../images/components/checks.png)
 
-- Checked, they wear the accent with its darker edge, as the primary button does.
+- Checked, they wear the accent with its darker edge, the logo's darker side.
 
 ## Choices
 

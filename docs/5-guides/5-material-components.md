@@ -40,8 +40,8 @@ the main one and an outline, for an action repeated in a list:
 <button class="button tonal" type="button">Sell one</button>
 ```
 
-On paper and glass the tonal button is a sunken fill in ink, so the accent stays for the main
-action. In Material it takes the accent's tint, as Android does.
+On paper it is the accent's pale tint, labelled in the accent's ink. In Material it takes
+Material's own container, as Android does.
 
 ## In Go: Material's parts
 

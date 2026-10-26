@@ -62,9 +62,9 @@ Each step moves the colour 6 % of the way toward black (in light mode, under whi
 white (in dark mode, under dark text). A bright accent, such as a yellow, keeps its colour and
 gets dark text instead: darkening a yellow would turn it brown.
 
-The button's darker edge borrows from the logos too. In every voxel logo, the right side of a
-block is its colour ×0.70 and the left side ×0.85. The main button stands on the ×0.70 edge, and
-uses the ×0.85 side when pressed.
+The darker sides borrow from the logos too. In every voxel logo, the right side of a block is its
+colour ×0.70 and the left side ×0.85. A checked box wears the ×0.70 edge, and the main button
+takes the ×0.85 side under the pointer. The main button itself is flat: its colour marks it.
 
 The tests check every pairing, in every theme, for a range of accents. That is the promise: pick
 any colour, and the text still reads.

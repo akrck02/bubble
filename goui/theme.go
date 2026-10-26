@@ -34,16 +34,20 @@ const (
 )
 
 // Theme turns a Bubble theme into go-ui's. The colours carry the same names, mostly; the sizes come
-// from Bubble's density. What is chosen is brighter and heavier, never coloured, and the main
-// button stands on its darker edge. On glass, panels and wells are the translucent panes, and the
-// window's background is glass's ground (paint it with Ground).
+// from Bubble's density. What is chosen is brighter and heavier, never coloured. Buttons are quiet:
+// medium labels, a flat main button, and an outline in the cards' soft line that darkens under the
+// pointer, while fields and check boxes keep a control's line. On glass, panels and
+// wells are the translucent panes, and the window's background is glass's ground (paint it with
+// Ground).
 func Theme(theme bubble.Theme) ui.Theme {
 	colours, shape, space, kind := theme.Colors, theme.Shape, theme.Space, theme.Type
 	result := ui.LightTheme()
 
 	result.Background, result.Surface, result.Sunken = colour(colours.Background), colour(colours.Surface), colour(colours.Sunken)
 	result.Ink, result.InkSoft, result.InkQuiet = colour(colours.Ink), colour(colours.InkSoft), colour(colours.InkQuiet)
-	result.Line, result.ControlLine = colour(colours.Line), colour(colours.ControlLine)
+	// go-ui outlines buttons in ControlLine and fields in FieldLine: buttons take the soft line.
+	result.Line, result.ControlLine = colour(colours.Line), colour(colours.Line)
+	result.FieldLine = colour(colours.ControlLine)
 	result.Primary, result.OnPrimary, result.PrimaryTint = colour(colours.Accent), colour(colours.OnAccent), colour(colours.AccentTint)
 	result.Positive, result.Warning, result.Danger = colour(colours.Positive), colour(colours.Warning), colour(colours.Danger)
 	result.FocusRing, result.Selection = colour(colours.FocusRing), colour(colours.Selection)
@@ -60,7 +64,7 @@ func Theme(theme bubble.Theme) ui.Theme {
 
 	result.ButtonRadius = float32(shape.ButtonRadius)
 	result.ButtonPadding = float32(space.Padding) * buttonPadding
-	result.ButtonGap, result.ButtonWeight = buttonGap, draw2d.Bold
+	result.ButtonGap, result.ButtonWeight = buttonGap, draw2d.Medium
 	result.PrimaryEdge, result.EdgeWidth = colour(colours.AccentEdge), float32(shape.EdgeWidth)
 	result.FlatHeight, result.FlatPadding, result.FlatInk = float32(space.ControlHeight), result.ButtonPadding, result.Ink
 
@@ -68,7 +72,7 @@ func Theme(theme bubble.Theme) ui.Theme {
 	result.ItemPadding, result.ItemGap, result.ItemIconInk = itemPadding, itemGap, result.Ink
 
 	result.CheckSize, result.CheckRadius, result.CheckBorder, result.CheckMark = checkSize, checkRadius, checkBorder, checkMark
-	result.CheckLine, result.CheckedBorder = result.ControlLine, result.PrimaryEdge
+	result.CheckLine, result.CheckedBorder = result.FieldLine, result.PrimaryEdge
 
 	// Focus lights the control's own edge, as Bubble's CSS does; pressing gives a little.
 	result.FocusWidth, result.FieldFocusEdge, result.PressScale = float32(shape.FocusWidth), true, pressScale
@@ -93,8 +97,8 @@ func materialy(result *ui.Theme, theme bubble.Theme) {
 	}
 	result.Sunken, result.Selection = colour(colours.ContainerHighest), colour(colours.AccentContainer)
 	result.LineHeight, result.HeadingLineHeight = base.LineHeight, base.HeadingLineHeight
-	result.ButtonWeight = draw2d.Medium // Material's labels; pills and room as Bubble shapes them
 	result.PrimaryEdge, result.EdgeWidth = base.PrimaryEdge, base.EdgeWidth
+	result.ControlLine = result.FieldLine // Material's outlines keep its outline colour
 	result.Chosen, result.ChosenInk, result.ChosenWeight = base.Chosen, base.ChosenInk, base.ChosenWeight
 	result.ItemPadding, result.ItemGap, result.ItemIconInk = base.ItemPadding, base.ItemGap, base.ItemIconInk
 	result.CheckSize, result.CheckRadius, result.CheckBorder, result.CheckMark = base.CheckSize, base.CheckRadius, base.CheckBorder, base.CheckMark
@@ -110,6 +114,7 @@ func glassy(result *ui.Theme, theme bubble.Theme) {
 	result.Sunken = colour(glass.Raised)
 	result.Chosen = result.Sunken
 	result.ControlLine = colour(theme.Colors.Ink.WithAlpha(glassFieldEdge))
+	result.FieldLine = result.ControlLine
 	result.BackdropBlur = float32(glass.Blur) // frosted, as CSS's backdrop-filter: blur()
 }
 
